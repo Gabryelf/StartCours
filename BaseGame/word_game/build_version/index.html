@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<!-- Эта строка говорит браузеру, что это HTML5 документ -->
+<html lang="ru">
+<!-- lang="ru" указывает, что язык контента - русский -->
+<head>
+    <!-- В <head> мы помещаем мета-информацию, стили, заголовок -->
+    
+    <meta charset="UTF-8">
+    <!-- Указываем кодировку UTF-8 для поддержки русских букв -->
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- 
+    Это ВАЖНО для мобильных устройств:
+    width=device-width - ширина экрана равна ширине устройства
+    initial-scale=1.0 - начальный масштаб 100%
+    maximum-scale=1.0 - запрещаем увеличивать масштаб
+    user-scalable=no - запрещаем пользователю масштабировать
+    -->
+    
+    <title>Word Wonders</title>
+    <!-- Заголовок игры (виден во вкладке браузера) -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Подключаем библиотеку Font Awesome для иконок (стрелочки, кнопки) -->
+    
+    <!-- Подключаем наши собственные CSS файлы -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/screens.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- В <body> помещаем всё, что видит пользователь -->
+        <!-- Главный экран (меню) -->
+    <!-- Главный экран -->
+    <div id="mainScreen" class="screen active">
+        <!-- ЛОГОТИП ИГРЫ -->
+        <div class="logo">
+            <h1>WORD WONDERS</h1>
+            <p>Собирай слова из букв</p>
+        </div>
+        
+        <!-- КНОПКИ ВЫБОРА РЕЖИМА -->
+        <div class="mode-buttons">
+            <!-- Кнопка "Бесконечная игра" -->
+            <button id="infiniteMode" class="mode-btn infinite">
+                <div class="mode-content">
+                    <div class="mode-icon">
+                        <!-- Иконка бесконечности из Font Awesome -->
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <div class="mode-text">
+                        <h3>Бесконечная игра</h3>
+                        <p>Уровни со сложностью</p>
+                    </div>
+                </div>
+                <!-- Стрелочка справа -->
+                <i class="fas fa-chevron-right"></i>
+            </button>
+            
+            <!-- Кнопка "Слово дня" -->
+            <button id="dailyMode" class="mode-btn daily">
+                <div class="mode-content">
+                    <div class="mode-icon">
+                        <!-- Иконка календаря -->
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="mode-text">
+                        <h3>Слово дня</h3>
+                        <p>Новая тема каждый день</p>
+                    </div>
+                </div>
+                <!-- Статус (Доступно/Пройдено) -->
+                <div id="dailyStatus" class="mode-status status-available">Доступно</div>
+            </button>
+        </div>
+        
+        <!-- ПАНЕЛЬ СТАТИСТИКИ -->
+        <div class="stats-bar">
+            <!-- Уровень -->
+            <div class="stat-item">
+                <div class="stat-icon" style="background: rgba(59, 130, 246, 0.2);">
+                    <i class="fas fa-trophy" style="color: #60a5fa;"></i>
+                </div>
+                <div class="stat-value" id="mainLevel">1</div>
+                <div class="stat-label">Уровень</div>
+            </div>
+            
+            <!-- Подсказки -->
+            <div class="stat-item">
+                <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2);">
+                    <i class="fas fa-lightbulb" style="color: #f59e0b;"></i>
+                </div>
+                <div class="stat-value" id="mainHints">3</div>
+                <div class="stat-label">Подсказки</div>
+            </div>
+            
+            <!-- Попытки -->
+            <div class="stat-item">
+                <div class="stat-icon" style="background: rgba(34, 197, 94, 0.2);">
+                    <i class="fas fa-eye" style="color: #4ade80;"></i>
+                </div>
+                <div class="stat-value" id="mainAttempts">5</div>
+                <div class="stat-label">Попытки</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Игровой экран (круг с буквами) -->
+    <!-- Игровой экран -->
+    <div id="gameScreen" class="screen">
+        <!-- ХЕДЕР (верхняя панель) -->
+        <div class="game-header">
+            <!-- Кнопка "Назад" -->
+            <button id="backBtn" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            
+            <!-- Центральная часть с информацией -->
+            <div class="header-center">
+                <!-- Уровень -->
+                <div class="header-stat level-display">
+                    <i class="fas fa-trophy"></i>
+                    <span id="currentLevel">1</span>
+                </div>
+                
+                <!-- Очки -->
+                <div class="header-stat score-display">
+                    <i class="fas fa-star"></i>
+                    <span id="score">0</span>
+                </div>
+                
+                <!-- Попытки -->
+                <div class="header-stat attempts-display">
+                    <i class="fas fa-fire"></i>
+                    <span id="remainingAttempts">0</span>/<span id="totalLetters">0</span>
+                </div>
+            </div>
+            
+            <!-- Правая часть с кнопками действий -->
+            <div class="header-right">
+                <button id="hintBtnHeader" class="hint-btn-header" title="Открыть слово">
+                    <i class="fas fa-lightbulb"></i>
+                </button>
+                <button id="revealBtnHeader" class="reveal-btn-header" title="Открыть букву">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- ОБЛАСТЬ СЛОВ (представление загаданных слов) -->
+        <div class="words-area">
+            <div class="words-grid" id="wordsGrid">
+                <!-- Сюда JavaScript добавит строки с буквами -->
+            </div>
+            <div class="word-info" id="wordInfo">
+                Найди все слова из доступных букв
+            </div>
+        </div>
+        
+        <!-- ОБЛАСТЬ ВВОДА (круг с буквами) -->
+        <div class="input-area">
+            <!-- Текущий ввод (буквы, которые игрок набрал) -->
+            <div id="currentInput" class="current-input">
+                <!-- Сюда JavaScript добавит набранные буквы -->
+            </div>
+            
+            <!-- Круг с буквами -->
+            <div class="circle-container" id="circleInput">
+                <!-- Сюда JavaScript добавит круг с буквами -->
+            </div>
+            
+            <!-- Кнопки управления -->
+            <div class="input-controls">
+                <button id="clearBtn" class="control-btn clear-btn" title="Очистить">
+                    <i class="fas fa-backspace"></i>
+                </button>
+                <button id="resetBtn" class="control-btn reset-btn" title="Сбросить набранные буквы">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button id="shuffleBtn" class="control-btn shuffle-btn" title="Перемешать буквы">
+                    <i class="fas fa-random"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Экран результатов (победа/поражение) -->
+    <div id="resultScreen" class="screen">
+        <!-- Здесь покажем результат игры -->
+    </div>
+    
+    <!-- Оверлей для сообщений (всплывающие окна) -->
+    <div id="messageOverlay" class="message-overlay">
+        <!-- Это всплывающее окно для сообщений типа "Правильно!" -->
+        <div class="message-box">
+            <div id="messageIcon" class="message-icon">✨</div>
+            <div id="messageText" class="message-text">Сообщение</div>
+            <button id="messageOk" class="message-btn">OK</button>
+        </div>
+    </div>
+
+     <!-- ПОДКЛЮЧАЕМ СКРИПТЫ В ПРАВИЛЬНОМ ПОРЯДКЕ -->
+     <script src="data/word-list.js"></script>
+     <script src="js/utils.js"></script>
+     <script src="js/storage-manager.js"></script>
+     <script src="js/level-generator.js"></script>
+     <script src="js/game-state.js"></script>
+     <script src="js/ui-manager.js"></script>
+     <script src="js/screen-manager.js"></script>
+     <script src="js/event-handlers.js"></script>
+     <script src="js/game.js"></script>
+
+    <script>
+        // Все тестирование помещаем внутри события DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📚 DOM загружен');
+            
+            // Проверяем, что WORD_LIST загружен
+            if (typeof WORD_LIST !== 'undefined') {
+                console.log('✅ WORD_LIST загружен:', WORD_LIST);
+                console.log('📖 Первые 5 слов:', WORD_LIST.common.slice(0, 5));
+                
+                // Функция для тестирования круга букв
+                function createTestCircle() {
+                    const circleContainer = document.getElementById('circleInput');
+                    if (!circleContainer) {
+                        console.error('❌ Не найден элемент circleInput');
+                        return;
+                    }
+                    
+                    // Очищаем предыдущее содержимое
+                    circleContainer.innerHTML = '';
+                    
+                    // Центральная кнопка
+                    const center = document.createElement('div');
+                    center.className = 'circle-center';
+                    center.innerHTML = '<i class="fas fa-check"></i>';
+                    circleContainer.appendChild(center);
+                    
+                    // Буквы по кругу
+                    const letters = ['К', 'О', 'Т', 'Д', 'М', 'А', 'Р', 'Л', 'С', 'Н'];
+                    const radius = 75;
+                    const centerX = 110;
+                    const centerY = 110;
+                    
+                    letters.forEach((letter, index) => {
+                        const angle = (index / letters.length) * 2 * Math.PI;
+                        const x = centerX + radius * Math.cos(angle);
+                        const y = centerY + radius * Math.sin(angle);
+                        
+                        const btn = document.createElement('div');
+                        btn.className = 'circle-letter';
+                        btn.textContent = letter;
+                        btn.style.left = `${x - 18}px`;
+                        btn.style.top = `${y - 18}px`;
+                        
+                        btn.addEventListener('click', () => {
+                            console.log(`🎯 Нажата буква: ${letter}`);
+                        });
+                        
+                        circleContainer.appendChild(btn);
+                    });
+                }
+                
+                // Обработчик для кнопки "Бесконечная игра"
+                const infiniteModeBtn = document.getElementById('infiniteMode');
+                if (infiniteModeBtn) {
+                    infiniteModeBtn.addEventListener('click', function() {
+                        console.log('🔄 Переключаемся на игровой экран');
+                        
+                        // Сначала показываем экран
+                        if (typeof showScreen === 'function') {
+                            showScreen('gameScreen');
+                        } else {
+                            // Если showScreen не определена, делаем вручную
+                            document.querySelectorAll('.screen').forEach(screen => {
+                                screen.classList.remove('active');
+                            });
+                            document.getElementById('gameScreen').classList.add('active');
+                            console.log('Экран переключен вручную');
+                        }
+                        
+                        // Затем создаем круг
+                        setTimeout(() => {
+                            createTestCircle();
+                            
+                            // Добавляем обработчики для кнопок управления
+                            const clearBtn = document.getElementById('clearBtn');
+                            if (clearBtn) {
+                                clearBtn.addEventListener('click', () => {
+                                    console.log('🗑️ Нажата кнопка "Очистить"');
+                                });
+                            }
+                            
+                            const shuffleBtn = document.getElementById('shuffleBtn');
+                            if (shuffleBtn) {
+                                shuffleBtn.addEventListener('click', () => {
+                                    console.log('🔀 Нажата кнопка "Перемешать"');
+                                    document.querySelectorAll('.circle-letter').forEach(letter => {
+                                        letter.style.background = 'rgba(139, 92, 246, 0.3)';
+                                        setTimeout(() => {
+                                            letter.style.background = '';
+                                        }, 200);
+                                    });
+                                });
+                            }
+                            
+                            // Центральная кнопка
+                            const centerBtn = document.querySelector('.circle-center');
+                            if (centerBtn) {
+                                centerBtn.addEventListener('click', () => {
+                                    console.log('✅ Нажата центральная кнопка проверки');
+                                });
+                            }
+                        }, 100);
+                    });
+                } else {
+                    console.error('❌ Не найдена кнопка infiniteMode');
+                }
+                
+                // Проверяем другие кнопки
+                const dailyModeBtn = document.getElementById('dailyMode');
+                if (dailyModeBtn) {
+                    dailyModeBtn.addEventListener('click', () => {
+                        console.log('📅 Нажата кнопка "Слово дня"');
+                    });
+                }
+                
+                const backBtn = document.getElementById('backBtn');
+                if (backBtn) {
+                    backBtn.addEventListener('click', () => {
+                        console.log('⬅️ Нажата кнопка "Назад"');
+                        if (typeof showScreen === 'function') {
+                            showScreen('mainScreen');
+                        } else {
+                            document.querySelectorAll('.screen').forEach(screen => {
+                                screen.classList.remove('active');
+                            });
+                            document.getElementById('mainScreen').classList.add('active');
+                        }
+                    });
+                }
+                
+            } else {
+                console.error('❌ WORD_LIST не определен! Проверьте загрузку word-list.js');
+            }
+            
+            // Проверяем загрузку других модулей
+            console.log('showScreen доступна:', typeof showScreen);
+            console.log('startInfiniteMode доступна:', typeof startInfiniteMode);
+        });
+    </script>
+    
+</body>
+</html>

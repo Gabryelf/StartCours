@@ -1,0 +1,112 @@
+/* 
+  ОБЩИЕ СТИЛИ ЭКРАНОВ
+  Все экраны имеют одинаковое базовое поведение
+*/
+.screen {
+    display: none;          /* По умолчанию все экраны скрыты */
+    height: 100vh;          /* Высота во весь экран */
+    width: 100vw;           /* Ширина во весь экран */
+    position: fixed;        /* Фиксированное позиционирование */
+    top: 0;                 /* Прижимаем к верхнему краю */
+    left: 0;                /* Прижимаем к левому краю */
+    flex-direction: column; /* Располагаем элементы в колонку */
+}
+
+/* 
+  АКТИВНЫЙ ЭКРАН
+  Когда добавляем класс .active - экран становится видимым
+*/
+.screen.active {
+    display: flex;          /* Используем flexbox для раскладки */
+}
+
+/* 
+  ГЛАВНЫЙ ЭКРАН (МЕНЮ)
+*/
+#mainScreen {
+    /* Центрируем содержимое по вертикали и горизонтали */
+    justify-content: center; /* Центр по вертикали */
+    align-items: center;     /* Центр по горизонтали */
+    
+    gap: 20px;              /* Расстояние между элементами */
+    padding: 16px;          /* Отступы от краев экрана */
+}
+
+/* 
+  ИГРОВОЙ ЭКРАН
+*/
+#gameScreen {
+    padding: 8px;           /* Меньшие отступы для игрового экрана */
+    gap: 6px;               /* Меньшее расстояние между элементами */
+}
+
+/* 
+  ЭКРАН РЕЗУЛЬТАТОВ
+*/
+#resultScreen {
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    text-align: center;     /* Выравниваем текст по центру */
+    padding: 16px;
+}
+
+/* 
+  ОВЕРЛЕЙ ДЛЯ СООБЩЕНИЙ
+  Это всплывающее окно поверх других экранов
+*/
+.message-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Полупрозрачный черный фон */
+    display: none;                   /* По умолчанию скрыт */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;                  /* Поверх всех элементов */
+    padding: 16px;                  /* Отступы от краев */
+}
+
+.message-overlay.active {
+    display: flex;                  /* Показываем при добавлении .active */
+    animation: fadeIn 0.3s;         /* Плавное появление */
+}
+
+/* 
+  КОНТЕЙНЕР СООБЩЕНИЯ
+*/
+.message-box {
+    background: #1e293b;            /* Темный фон как у body */
+    border-radius: 12px;            /* Скругленные углы */
+    padding: 18px;                  /* Внутренние отступы */
+    max-width: 260px;               /* Максимальная ширина */
+    width: 100%;                    /* Занимает всю доступную ширину */
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая белая рамка */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);  /* Тень для объема */
+}
+
+.message-icon {
+    font-size: 1.6rem;             /* Крупная иконка */
+    margin-bottom: 10px;           /* Отступ снизу */
+}
+
+.message-text {
+    font-size: 0.9rem;             /* Размер текста сообщения */
+    margin-bottom: 14px;           /* Отступ перед кнопкой */
+    line-height: 1.4;              /* Межстрочный интервал */
+}
+
+.message-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8); /* Синий градиент */
+    color: white;                   /* Белый текст */
+    border: none;                   /* Без рамки */
+    border-radius: 8px;             /* Скругленные углы */
+    padding: 10px;                  /* Отступы внутри кнопки */
+    font-size: 0.9rem;              /* Размер текста */
+    font-weight: 600;               /* Жирный текст */
+    cursor: pointer;                /* Курсор-указатель при наведении */
+    width: 100%;                    /* На всю ширину контейнера */
+}
