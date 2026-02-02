@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Базовый минимум</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f5f5f5;
+        }
+        
+        .clicker-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin: 30px auto;
+            transition: transform 0.1s;
+        }
+        
+        .clicker-button:active {
+            transform: scale(0.95);
+        }
+        
+        .counter {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Base 🎮 Mini </h1>
+        <a href="/BaseGame/word_game/index.html">
+            <button> GO </button>
+        </a>
+        <div class="counter" id="counter">0</div>
+        <p>💎</p>
+        <button class="clicker-button" id="clickButton">
+            <small> 👿 </small>
+            Только попробуй!<br>
+            <small>+1 за клик</small>
+        </button>
+    </div>
+
+    <script>
+        // ======================
+        // 1. ХРАНЕНИЕ СОСТОЯНИЯ
+        // ======================
+        let clickCount = 0;      // Переменная для хранения количества кликов
+        let clickPower = 1;      // Сколько очков дает один клик (начинаем с 1)
+
+        // ======================
+        // 2. ПОЛУЧЕНИЕ ЭЛЕМЕНТОВ
+        // ======================
+        // Находим элементы на странице по их id
+        const counterElement = document.getElementById('counter');
+        const clickButton = document.getElementById('clickButton');
+
+        // ======================
+        // 3. ФУНКЦИЯ ОБНОВЛЕНИЯ
+        // ======================
+        function updateUI() {
+            // Обновляем текст счетчика
+            counterElement.textContent = clickCount.toLocaleString();
+            
+            // Меняем цвет в зависимости от количества кликов
+            if (clickCount > 100) {
+                counterElement.style.color = '#FF5722';
+            } else if (clickCount > 50) {
+                counterElement.style.color = '#FF9800';
+            } else if (clickCount > 20) {
+                counterElement.style.color = '#4CAF50';
+            }
+            
+            // Меняем размер кнопки (немного увеличиваем при росте)
+            const scale = 1 + Math.min(clickCount / 500, 0.3);
+            clickButton.style.transform = `scale(${scale})`;
+        }
+
+        // ======================
+        // 4. ФУНКЦИЯ ОБРАБОТКИ КЛИКА
+        // ======================
+        function handleClick() {
+            // Увеличиваем счетчик на значение clickPower
+            clickCount += clickPower;
+            
+            // Обновляем интерфейс
+            updateUI();
+            
+            // Создаем эффект "+1" (визуальная обратная связь)
+            createClickEffect();
+            
+            // Воспроизводим звук (опционально)
+            playClickSound();
+        }
+
+        // ======================
+        // 5. ДОПОЛНИТЕЛЬНЫЕ ЭФФЕКТЫ
+        // ======================
+        // Создаем эффект появления числа при клике
+        function createClickEffect() {
+            const effect = document.createElement('div');
+            effect.textContent = `+${clickPower}`;
+            effect.style.position = 'absolute';
+            effect.style.color = '#4CAF50';
+            effect.style.fontWeight = 'bold';
+            effect.style.fontSize = '20px';
+            effect.style.pointerEvents = 'none';
+            effect.style.animation = 'floatUp 1s forwards';
+            
+            // Позиционируем эффект возле кнопки
+            const rect = clickButton.getBoundingClientRect();
+            effect.style.left = `${rect.left + rect.width / 2}px`;
+            effect.style.top = `${rect.top}px`;
+            
+            document.body.appendChild(effect);
+            
+            // Удаляем эффект через 1 секунду
+            setTimeout(() => effect.remove(), 1000);
+        }
+
+        // Простая функция звука
+        function playClickSound() {
+            // Можно использовать встроенный звук или подключить файл
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800 + clickCount % 200;
+            gainNode.gain.value = 0.1;
+            
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 100);
+        }
+
+        // ======================
+        // 6. ДОБАВЛЯЕМ СТИЛИ ДЛЯ АНИМАЦИИ
+        // ======================
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatUp {
+                0% { 
+                    opacity: 1; 
+                    transform: translate(-50%, 0) scale(1); 
+                }
+                100% { 
+                    opacity: 0; 
+                    transform: translate(-50%, -50px) scale(0.5); 
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ======================
+        // 7. НАЗНАЧАЕМ ОБРАБОТЧИК СОБЫТИЯ
+        // ======================
+        clickButton.addEventListener('click', handleClick);
+
+        // ======================
+        // 8. ИНИЦИАЛИЗАЦИЯ
+        // ======================
+        updateUI(); // Обновляем интерфейс при загрузке
+    </script>
+</body>
+</html>
