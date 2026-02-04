@@ -285,8 +285,6 @@ function createClickEffect() {
     
     // Добавляем на страницу
     document.body.appendChild(effect);
-    const levelUpSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3');
-    levelUpSound.play();
     
     // Анимация эффекта
     let opacity = 1;
@@ -309,6 +307,51 @@ function createClickEffect() {
     animate();
 }
 
+// Простой вариант анимации (вставьте в ваш script.js)
+function initPokemonAnimations() {
+    const pokemon = document.getElementById('main-image');
+    if (!pokemon) return;
+    
+    // Просто добавляем CSS класс
+    pokemon.style.transition = 'transform 0.5s ease';
+    
+    // Функция случайной анимации
+    function randomAnimation() {
+        const animations = ['jump', 'spin', 'grow'];
+        const anim = animations[Math.floor(Math.random() * animations.length)];
+        
+        switch(anim) {
+            case 'jump':
+                pokemon.style.transform = 'translateY(-50px)';
+                setTimeout(() => {
+                    pokemon.style.transform = 'translateY(0)';
+                }, 500);
+                break;
+                
+            case 'spin':
+                pokemon.style.transform = 'rotate(360deg)';
+                setTimeout(() => {
+                    pokemon.style.transform = 'rotate(0deg)';
+                }, 1000);
+                break;
+                
+            case 'grow':
+                pokemon.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    pokemon.style.transform = 'scale(1)';
+                }, 300);
+                break;
+        }
+        
+        // Следующая анимация через 3-8 секунд
+        setTimeout(randomAnimation, 3000 + Math.random() * 5000);
+    }
+    
+    // Запускаем первую анимацию через 2 секунды
+    setTimeout(randomAnimation, 2000);
+}
+
+
 /**
  * Инициализирует игру
  */
@@ -327,6 +370,7 @@ function initGame() {
     
     // Устанавливаем первую картинку
     changeImage(0);
+    initPokemonAnimations();
     
     
     // Добавляем обработчик клика на кнопку

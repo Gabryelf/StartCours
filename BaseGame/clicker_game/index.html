@@ -10,7 +10,6 @@
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-star"></i></h1>
             <div class="score-container">
                 <div class="score">
                     <i class="fas fa-trophy"></i>
@@ -23,15 +22,23 @@
                     <span id="next-level-count">100</span>
                 </div>
             </div>
+            <!-- Прогресс бар -->
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="progress-text">0%</div>
+            </div>
         </header>
 
         <main>
             <!-- Главная картинка, которая будет меняться -->
             <div class="main-image-container">
-                <img id="main-image" src="./images/1.png" alt="Главная картинка">
                 <div class="image-info">
                     <span id="image-number">Nidoking</span>
                 </div>
+                <img id="main-image" src="./images/1.png" alt="Главная картинка">
+                
             </div>
 
             <!-- Кнопка для кликов -->
@@ -46,18 +53,8 @@
                 </div>
             </div>
 
-            <!-- Прогресс бар -->
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div id="progress-fill" class="progress-fill"></div>
-                </div>
-                <div class="progress-text" id="progress-text">0%</div>
-            </div>
         </main>
 
-        <footer>
-           
-        </footer>
     </div>
 
     <script src="sound-generator.js"></script>

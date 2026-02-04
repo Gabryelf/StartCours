@@ -8,7 +8,7 @@
 
 body {
     background: linear-gradient(135deg, #131314 0%, #262427 100%);
-    min-height: 100vh;
+    max-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,9 +32,13 @@ header {
     border-bottom: 2px solid #f0f0f0;
 }
 
+main {
+    max-height: 60vh;
+}
+
 h1 {
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 60px;
     font-size: 2.5rem;
 }
 
@@ -47,7 +51,7 @@ h1 i {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 30px;
 }
 
 .score, .next-level {
@@ -87,9 +91,9 @@ h1 i {
 /* Основная картинка */
 .main-image-container {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
     padding: 20px;
-    background: #f8f9fa;
+    background: #f8f9fa00;
     border-radius: 15px;
 }
 
@@ -98,8 +102,8 @@ h1 i {
     max-width: 300px;
     height: auto;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    border: 5px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0);
+    border: 5px solid rgba(255, 255, 255, 0);
     transition: transform 0.3s ease;
 }
 
@@ -108,7 +112,7 @@ h1 i {
 }
 
 .image-info {
-    margin-top: 15px;
+    margin-top: -45px;
     font-size: 1.2rem;
     color: #666;
     font-weight: bold;
@@ -117,7 +121,7 @@ h1 i {
 /* Область для кликов */
 .click-area {
     text-align: center;
-    margin-bottom: 30px;
+    margin-top: -80px;
 }
 
 #click-button {
@@ -167,7 +171,7 @@ h1 i {
 
 /* Прогресс бар */
 .progress-container {
-    margin: 30px 0;
+    margin: 20px 0;
 }
 
 .progress-bar {
