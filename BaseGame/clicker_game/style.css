@@ -224,6 +224,18 @@ footer {
     line-height: 1.5;
 }
 
+
+@keyframes floatUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
     .container {

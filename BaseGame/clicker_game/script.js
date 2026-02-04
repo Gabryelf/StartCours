@@ -53,6 +53,31 @@ const progressFill = document.getElementById('progress-fill');
 const progressText = document.getElementById('progress-text');
 
 // ==============================
+// СИСТЕМА ЗВУКОВ
+// ==============================
+
+// Эта функция проверяет доступность звукового генератора
+function initSoundSystem() {
+    // Проверяем, что GameSoundGenerator загружен
+    if (typeof GameSoundGenerator === 'undefined') {
+        console.warn('⚠️ Sound generator not loaded! Check script order in HTML');
+        return false;
+    }
+    
+    // Инициализируем звуковую систему
+    GameSoundGenerator.init();
+    
+    // Активируем после первого клика пользователя
+    document.addEventListener('click', function activateSound() {
+        GameSoundGenerator.activate();
+        document.removeEventListener('click', activateSound);
+    }, { once: true });
+    
+    return true;
+}
+
+
+// ==============================
 // ФУНКЦИИ ИГРЫ
 // ==============================
 
@@ -117,6 +142,19 @@ function checkForImageChange() {
             if (currentImageIndex < GAME_SETTINGS.imageThresholds.length) {
                 nextThreshold = GAME_SETTINGS.imageThresholds[currentImageIndex];
             }
+
+            // ИСПОЛЬЗУЕМ GameSoundGenerator из отдельного файла
+            if (typeof GameSoundGenerator !== 'undefined') {
+                GameSoundGenerator.playLevelUp();
+                
+                // Дополнительный звук покемона
+                const pokemonTypes = ['normal', 'electric', 'fire', 'water', 'normal', 'electric'];
+                GameSoundGenerator.playPokemonSound(pokemonTypes[currentImageIndex % pokemonTypes.length]);
+            }
+            
+            if (currentImageIndex < GAME_SETTINGS.imageThresholds.length) {
+                nextThreshold = GAME_SETTINGS.imageThresholds[currentImageIndex];
+            }
             
             // Создаем эффект смены картинки
             createImageChangeEffect();
@@ -145,8 +183,6 @@ function createImageChangeEffect() {
         mainImageElement.classList.remove('image-change');
     }, 500);
     
-    // Показываем сообщение
-    alert(`🎉 Поздравляем! Открыта новая картинка: ${GAME_SETTINGS.imageNames[currentImageIndex]}!`);
 }
 
 /**
@@ -163,6 +199,11 @@ function handleClick() {
     // Проверяем, нужно ли менять картинку
     checkForImageChange();
     updateNextLevelInfo();
+    // ИСПОЛЬЗУЕМ GameSoundGenerator из отдельного файла
+    if (typeof GameSoundGenerator !== 'undefined') {
+        GameSoundGenerator.playClick();
+        // или GameSoundGenerator.play8BitClick();
+    }
     
     // Создаем эффект клика
     createClickEffect();
@@ -185,11 +226,19 @@ function createClickEffect() {
     
     // Позиционируем эффект рядом с кнопкой
     const buttonRect = clickButton.getBoundingClientRect();
-    effect.style.left = `${buttonRect.left + buttonRect.width/2}px`;
+    // Чтобы каждый эффект был немного разным
+    //const randomOffset = Math.random() * 20 - 10; // от -10 до 10
+    //effect.style.left = `${buttonRect.left + buttonRect.width/2 + randomOffset}px`;
+
+    // Разный цвет
+    //const colors = ['#667eea', '#4CAF50', '#FF5722', '#FFD700'];
+    //effect.style.color = colors[Math.floor(Math.random() * colors.length)];
     effect.style.top = `${buttonRect.top}px`;
     
     // Добавляем на страницу
     document.body.appendChild(effect);
+    const levelUpSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3');
+    levelUpSound.play();
     
     // Анимация эффекта
     let opacity = 1;
@@ -216,9 +265,13 @@ function createClickEffect() {
  * Инициализирует игру
  */
 function initGame() {
-    console.log('🎮 Игра инициализирована!');
-    console.log('Настройки игры:', GAME_SETTINGS);
-    
+
+     // 1. Инициализируем звуковую систему
+     const soundSystemReady = initSoundSystem();
+     if (!soundSystemReady) {
+         console.warn('Звуковая система не доступна, игра продолжится без звуков');
+     }
+     GameSoundGenerator.playPokemonSound('electric');
     // Настраиваем начальные значения
     updateScore();
     updateNextLevelInfo();
@@ -226,6 +279,7 @@ function initGame() {
     
     // Устанавливаем первую картинку
     changeImage(0);
+    
     
     // Добавляем обработчик клика на кнопку
     clickButton.addEventListener('click', handleClick);
@@ -252,6 +306,8 @@ function initGame() {
         }
     `;
     document.head.appendChild(style);
+
+    createSoundControls();
 }
 
 // ==============================
@@ -264,52 +320,5 @@ window.addEventListener('load', initGame);
 // ==============================
 // ИНСТРУКЦИИ ДЛЯ НАСТРОЙКИ
 // ==============================
+window.GameSoundGenerator = GameSoundGenerator; // Для прямого доступа к звукам
 
-/*
-Как настроить игру под себя:
-
-1. ЗАМЕНИТЕ КАРТИНКИ:
-   В объекте GAME_SETTINGS в массиве images замените ссылки на свои картинки.
-   Можно использовать:
-   - Прямые ссылки на картинки в интернете
-   - Относительные пути к файлам в вашей папке
-   
-   Пример:
-   images: [
-       "img/my-image-1.jpg",
-       "img/my-image-2.jpg",
-       "img/my-image-3.jpg"
-   ]
-
-2. НАСТРОЙТЕ ПОРОГИ:
-   В массиве imageThresholds укажите, при каком количестве очков 
-   будет меняться каждая следующая картинка.
-   
-   Пример для 5 картинок:
-   imageThresholds: [50, 150, 300, 600, 1200]
-
-3. ИЗМЕНИТЕ НАЗВАНИЯ КАРТИНОК:
-   В массиве imageNames укажите названия для ваших картинок.
-
-4. ДОБАВЬТЕ СВОИ КАРТИНКИ:
-   - Создайте папку "img" в вашем проекте
-   - Поместите туда ваши картинки
-   - Обновите ссылки в массиве images
-   
-5. ЕСЛИ ХОТИТЕ БОЛЬШЕ КАРТИНОК:
-   - Добавьте больше ссылок в массивы images и imageNames
-   - Добавьте больше порогов в массив imageThresholds
-*/
-
-// Для тестирования можно добавить эту функцию:
-function cheatAddPoints(points) {
-    score += points;
-    updateScore();
-    updateProgress();
-    checkForImageChange();
-    updateNextLevelInfo();
-    alert(`Добавлено ${points} очков!`);
-}
-
-// Чтобы использовать читы, откройте консоль браузера (F12)
-// и введите: cheatAddPoints(1000)
