@@ -1,27 +1,32 @@
+Отличная задача! Вот обновлённое руководство, где каждая команда получает несколько маленьких заданий, чтобы каждый участник сделал свой коммит:
+
+---
+
 # Занятие 2: Основы Git, canvas, первый рисунок
 
 ## Подготовка ментора (до занятия)
 
 - [ ] Проверить и смерджить все PR с прошлого занятия в `develop`
 - [ ] Обновить локальную ветку `develop`
-- [ ] Подготовить простой пример с canvas для демонстрации
-- [ ] Создать issue на каждого участника для второго занятия (шаблон ниже)
+- [ ] Создать файлы для каждой команды с заготовками (см. ниже)
+- [ ] Создать issue на каждого участника
 
-### Шаблон issue для второго занятия
+### Шаблон issue для участника
 ```markdown
-## Задача: Нарисовать [компонент] на canvas
-
-**Команда:** [название]
+## Задача: Добавить [конкретный элемент] в [файл]
 
 **Задание:**
-- [ ] Создать ветку `feature/[команда]-draw-[компонент]` от `develop`
-- [ ] Написать функцию отрисовки в своём файле
-- [ ] Подключить функцию в `main.js`
-- [ ] Открыть PR
+- [ ] Создать ветку `feature/[имя]-[элемент]` от `develop`
+- [ ] В файле `js/[файл].js` добавить функцию `window.draw[Элемент]`
+- [ ] Закоммитить изменения
+- [ ] Открыть PR в `develop`
+
+**Что нужно сделать:**
+[Подробное описание задачи]
 
 **Критерии приёмки:**
-- [ ] Функция принимает контекст canvas и координаты
-- [ ] При вызове функция рисует нужную фигуру
+- [ ] Функция принимает ctx, x, y (и другие параметры если нужно)
+- [ ] Функция рисует правильную фигуру
 - [ ] В консоли нет ошибок
 ```
 
@@ -31,360 +36,403 @@
 
 ### 10 мин: Разбор ДЗ и повторение Git
 
-**Открываю GitHub и показываю:**
-> "На прошлом занятии все открыли PR, я их смерджил. Теперь в ветке `develop` есть все ваши файлы. Давайте обновим свои локальные копии."
+**Показываю на экране:**
+> "На прошлом занятии мы создали файлы. Сейчас я их всех смерджил в `develop`. Давайте обновимся!"
 
 ```bash
-# Переходим на develop
 git checkout develop
-
-# Скачиваем изменения
 git pull origin develop
-
-# Смотрим, что появились новые файлы
-ls -la js/
 ```
 
-> "Теперь у всех есть файлы других команд. Именно так мы и будем работать — каждый добавляет свой кусочек, а потом мы всё собираем вместе."
+### 15 мин: Теория
 
-### 20 мин: Теория
+#### Часть 1. Глобальные функции (5 мин)
 
-#### Часть 1. Git Flow (углублённо) — 10 мин
+> "Мы будем использовать простой подход: все функции будут доступны через `window`. Это значит, что мы пишем:"
 
-> "Давайте разберём, что будет, если два человека изменят один файл. Это называется конфликт."
+```javascript
+window.drawSomething = function(ctx, x, y) {
+    // код
+};
+```
 
-**Демонстрация:**
-1. Показываю два окна с разными ветками
-2. Вношу изменения в одну строку
-3. Пытаюсь смерджить — возникает конфликт
-
-> "Как решать конфликт:"
-> 1. Git помечает файл: `<<<<<<<`, `=======`, `>>>>>>>`
-> 2. Вы вручную выбираете, что оставить
-> 3. Убираете маркеры конфликта
-> 4. Коммитите результат
-
-> "Но сегодня мы постараемся избежать конфликтов — каждый работает в своём файле."
+> "И потом можем вызвать из любого места просто `drawSomething(ctx, 100, 100)`"
 
 #### Часть 2. Canvas API — 10 мин
 
-**Открываю пустой HTML и показываю:**
-
+**Показываю пример:**
 ```html
 <canvas id="gameCanvas" width="800" height="600" style="border:1px solid black;"></canvas>
 <script>
-    // Получаем холст
     const canvas = document.getElementById('gameCanvas');
-    
-    // Берём контекст — это наша кисть
     const ctx = canvas.getContext('2d');
     
-    // Рисуем зелёный прямоугольник
-    ctx.fillStyle = 'green';
-    ctx.fillRect(10, 10, 50, 50);
-    
-    // Рисуем красный круг
+    // Круг
     ctx.fillStyle = 'red';
     ctx.beginPath();
-    ctx.arc(100, 35, 20, 0, 2 * Math.PI);
+    ctx.arc(100, 100, 30, 0, 2 * Math.PI);
     ctx.fill();
     
-    // Рисуем текст
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Arial';
-    ctx.fillText('Привет, игра!', 200, 50);
+    // Прямоугольник
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(200, 100, 50, 50);
+    
+    // Линия
+    ctx.strokeStyle = 'green';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(300, 100);
+    ctx.lineTo(400, 200);
+    ctx.stroke();
 </script>
 ```
 
-> **Важно про координаты:**
-> - (0,0) — левый верхний угол
-> - X растёт вправо
-> - Y растёт вниз
+### 60 мин: Практика (каждый делает свой коммит!)
 
-> **Очистка canvas:**
-> ```javascript
-> ctx.clearRect(0, 0, canvas.width, canvas.height);
-> ```
+#### Этап 1. Integration & QA создают основу (5 мин)
 
-### 55 мин: Практика
+**Файл `index.html`** (уже есть):
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Наша игра</title>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600" style="border:1px solid black;"></canvas>
+    
+    <!-- Порядок важен! Сначала функции, потом main -->
+    <script src="js/core.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/graphics.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
+```
 
-#### Этап 1. Интеграция & QA создают основу (5 мин)
+**Файл `js/main.js`**:
+```javascript
+// Получаем canvas и контекст
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-**Команда Integration & QA получает задание:**
-> "Вы — наши главные строители. Вам нужно создать фундамент, на котором остальные будут рисовать."
+function gameLoop() {
+    // Очищаем canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // ЗДЕСЬ БУДУТ ВЫЗОВЫ ФУНКЦИЙ
+    
+    requestAnimationFrame(gameLoop);
+}
 
-**Задание для Integration & QA:**
-1. В `index.html` добавить canvas:
-   ```html
-   <canvas id="gameCanvas" width="800" height="600" style="border:1px solid black; display: block; margin: 0 auto;"></canvas>
-   ```
-2. В `js/main.js` написать:
-   ```javascript
-   // Получаем canvas и контекст
-   const canvas = document.getElementById('gameCanvas');
-   const ctx = canvas.getContext('2d');
-   
-   // Функция игрового цикла
-   function gameLoop() {
-       // Очищаем canvas
-       ctx.clearRect(0, 0, canvas.width, canvas.height);
-       
-       // Здесь будем вызывать функции отрисовки из других команд
-       
-       // Запрашиваем следующий кадр (пока просто чтобы был)
-       requestAnimationFrame(gameLoop);
-   }
-   
-   // Запускаем игру
-   gameLoop();
-   ```
-3. Подключить все JS-файлы как модули (важно!):
-   ```html
-   <script src="js/main.js" type="module"></script>
-   ```
+// Запускаем игру
+gameLoop();
+```
 
-#### Этап 2. Каждая команда создаёт свою ветку (5 мин)
+---
 
-> "Теперь каждый создаёт новую ветку от свежего `develop`."
+#### Этап 2. Каждый создаёт свою ветку (3 мин)
+
+> "Теперь каждый создаёт свою ветку от свежего develop"
 
 ```bash
-# Убеждаемся, что мы на develop и он обновлён
 git checkout develop
 git pull origin develop
-
-# Создаём ветку для нового задания
-git checkout -b feature/[команда]-draw-[что-то]
-
-# Например: feature/core-draw-player
+git checkout -b feature/[своё-имя]-[что-делает]
 ```
 
-#### Этап 3. Выполняем задания (35 мин)
+---
 
-**Задания для команд:**
+#### Этап 3. Выполняем задания (40 мин)
 
-##### Команда Core Mechanics
+### Команда Core Mechanics (2-3 человека)
+
 **Файл:** `js/core.js`
-**Код для добавления:**
+
+##### Участник 1: Игрок (основа)
 ```javascript
-// Функция отрисовки игрока
-export function drawPlayer(ctx, x, y) {
-    // Жёлтый круг
-    ctx.fillStyle = 'yellow';
-    ctx.beginPath();
-    ctx.arc(x, y, 15, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // Глаза (чтобы было понятно, куда смотрит)
-    ctx.fillStyle = 'black';
-    ctx.beginPath();
-    ctx.arc(x - 5, y - 5, 3, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 5, y - 5, 3, 0, 2 * Math.PI);
-    ctx.fill();
+// Задание: нарисовать основу игрока - жёлтый круг
+window.drawPlayerBase = function(ctx, x, y) {
+    // TODO: Жёлтый круг радиусом 15
+    // Используй: fillStyle = 'yellow', arc, fill
 }
 ```
-**Что освоят:**
-- Создание и экспорт функций
-- Рисование кругов (`arc`)
-- Система координат
 
-##### Команда Game State & UI
-**Файл:** `js/ui.js`
-**Код для добавления:**
+##### Участник 2: Глаза игрока
 ```javascript
-export function drawHungerHealth(ctx, hunger, health) {
+// Задание: нарисовать глаза игроку
+window.drawPlayerEyes = function(ctx, x, y) {
+    // TODO: Два белых круга радиусом 3 на позициях (x-5, y-5) и (x+5, y-5)
+    // Потом два чёрных круга радиусом 1.5 внутри них
+    // Используй: fillStyle = 'white', arc, fill, потом fillStyle = 'black'
+}
+```
+
+##### Участник 3: Объединение (если есть)
+```javascript
+// Задание: создать полную функцию игрока
+window.drawPlayer = function(ctx, x, y) {
+    // TODO: Вызвать drawPlayerBase и drawPlayerEyes
+    // Подсказка: просто вызови функции выше
+}
+```
+
+---
+
+### Команда Game State & UI (2-3 человека)
+
+**Файл:** `js/ui.js`
+
+##### Участник 1: Полоска здоровья
+```javascript
+// Задание: нарисовать красную полоску здоровья
+window.drawHealthBar = function(ctx, x, y, healthPercent) {
     const barWidth = 200;
     const barHeight = 20;
-    const startX = 10;
-    let startY = 10;
     
-    // Здоровье (красная полоска)
-    ctx.fillStyle = 'red';
-    ctx.fillRect(startX, startY, (health / 100) * barWidth, barHeight);
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(startX, startY, barWidth, barHeight);
-    ctx.fillStyle = 'black';
-    ctx.font = '14px Arial';
-    ctx.fillText(`HP: ${health}`, startX + barWidth + 10, startY + 15);
-    
-    // Голод (зелёная полоска)
-    startY += barHeight + 5;
-    ctx.fillStyle = 'green';
-    ctx.fillRect(startX, startY, (hunger / 100) * barWidth, barHeight);
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(startX, startY, barWidth, barHeight);
-    ctx.fillStyle = 'black';
-    ctx.fillText(`Hunger: ${hunger}`, startX + barWidth + 10, startY + 15);
+    // TODO: 
+    // 1. Нарисовать красный прямоугольник шириной healthPercent% от barWidth
+    // 2. Нарисовать чёрную обводку вокруг всей полоски
+    // Используй: fillStyle = 'red', fillRect, strokeStyle = 'black', strokeRect
 }
 ```
-**Что освоят:**
-- Рисование прямоугольников (`fillRect`, `strokeRect`)
-- Работа с текстом (`fillText`)
-- Простая логика преобразования чисел
 
-##### Команда AI & Balance
+##### Участник 2: Полоска голода
+```javascript
+// Задание: нарисовать зелёную полоску голода
+window.drawHungerBar = function(ctx, x, y, hungerPercent) {
+    const barWidth = 200;
+    const barHeight = 20;
+    
+    // TODO: 
+    // 1. Нарисовать зелёный прямоугольник шириной hungerPercent% от barWidth
+    // 2. Нарисовать чёрную обводку вокруг всей полоски
+    // Используй: fillStyle = 'green', fillRect, strokeStyle = 'black', strokeRect
+}
+```
+
+##### Участник 3: Текст и объединение
+```javascript
+// Задание: добавить подписи к полоскам
+window.drawHealthText = function(ctx, x, y, health) {
+    // TODO: Написать текст "HP: X" справа от полоски здоровья
+    // Используй: font = '14px Arial', fillStyle = 'black', fillText
+}
+
+window.drawHungerText = function(ctx, x, y, hunger) {
+    // TODO: Написать текст "Hunger: X" справа от полоски голода
+}
+
+// Объединение
+window.drawHungerHealth = function(ctx, hunger, health) {
+    // TODO: Вызвать все функции выше с правильными координатами
+    // Подсказка: x = 10, y = 10 для здоровья, y = 35 для голода
+}
+```
+
+---
+
+### Команда AI & Balance (2-3 человека)
+
 **Файл:** `js/ai.js`
-**Код для добавления:**
+
+##### Участник 1: Паук
 ```javascript
-export function drawEnemy(ctx, x, y, type) {
-    // Выбираем цвет в зависимости от типа
-    let color;
-    if (type === 'spider') {
-        color = 'red';
-    } else if (type === 'hound') {
-        color = 'brown';
-    } else {
-        color = 'gray';
-    }
-    
-    // Рисуем тело
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x, y, 15, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    // Глаза (злые)
-    ctx.fillStyle = 'white';
-    ctx.beginPath();
-    ctx.arc(x - 5, y - 5, 4, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 5, y - 5, 4, 0, 2 * Math.PI);
-    ctx.fill();
-    
-    ctx.fillStyle = 'black';
-    ctx.beginPath();
-    ctx.arc(x - 5, y - 5, 2, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 5, y - 5, 2, 0, 2 * Math.PI);
-    ctx.fill();
+// Задание: нарисовать паука (красный)
+window.drawSpider = function(ctx, x, y) {
+    // TODO: Красный круг радиусом 15
+    // Используй: fillStyle = 'red', arc, fill
 }
 ```
-**Что освоят:**
-- Условные операторы (`if/else`)
-- Параметры функций
-- Переиспользование кода
 
-##### Команда Assets & Graphics
+##### Участник 2: Гончая
+```javascript
+// Задание: нарисовать гончую (коричневый)
+window.drawHound = function(ctx, x, y) {
+    // TODO: Коричневый круг радиусом 15
+    // Используй: fillStyle = 'brown', arc, fill
+}
+```
+
+##### Участник 3: Глаза для врагов
+```javascript
+// Задание: нарисовать злые глаза
+window.drawEnemyEyes = function(ctx, x, y) {
+    // TODO: Два белых круга с чёрными зрачками
+    // Белые круги радиусом 4 на (x-5, y-5) и (x+5, y-5)
+    // Чёрные круги радиусом 2 внутри них
+}
+
+// Объединение (если есть)
+window.drawEnemy = function(ctx, x, y, type) {
+    if (type === 'spider') window.drawSpider(ctx, x, y);
+    if (type === 'hound') window.drawHound(ctx, x, y);
+    window.drawEnemyEyes(ctx, x, y);
+}
+```
+
+---
+
+### Команда Assets & Graphics (2-3 человека)
+
 **Файл:** `js/graphics.js`
-**Код для добавления:**
+
+##### Участник 1: Ствол дерева
 ```javascript
-export function drawTree(ctx, x, y) {
-    // Ствол
-    ctx.fillStyle = 'brown';
-    ctx.fillRect(x - 5, y - 20, 10, 40);
-    
-    // Крона (три зелёных круга)
-    ctx.fillStyle = 'green';
-    ctx.beginPath();
-    ctx.arc(x, y - 30, 15, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x - 10, y - 20, 12, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 10, y - 20, 12, 0, 2 * Math.PI);
-    ctx.fill();
+// Задание: нарисовать ствол дерева
+window.drawTreeTrunk = function(ctx, x, y) {
+    // TODO: Коричневый прямоугольник 10x40
+    // Используй: fillStyle = 'brown', fillRect
+    // Подсказка: x-5, y-20, 10, 40
 }
 ```
-**Что освоят:**
-- Композиция фигур
-- Рисование прямоугольников и кругов вместе
 
-##### Команда Sound & Effects
+##### Участник 2: Крона дерева (верх)
+```javascript
+// Задание: нарисовать верхнюю часть кроны
+window.drawTreeTop = function(ctx, x, y) {
+    // TODO: Зелёный круг радиусом 15 в позиции (x, y-30)
+    // Используй: fillStyle = 'green', arc, fill
+}
+```
+
+##### Участник 3: Боковые части кроны
+```javascript
+// Задание: нарисовать боковые части кроны
+window.drawTreeSides = function(ctx, x, y) {
+    // TODO: Два зелёных круга радиусом 12
+    // Первый: (x-10, y-20)
+    // Второй: (x+10, y-20)
+}
+
+// Объединение
+window.drawTree = function(ctx, x, y) {
+    window.drawTreeTrunk(ctx, x, y);
+    window.drawTreeTop(ctx, x, y);
+    window.drawTreeSides(ctx, x, y);
+}
+```
+
+---
+
+### Команда Sound & Effects (2-3 человека)
+
 **Файл:** `js/effects.js`
-**Код для добавления:**
+
+##### Участник 1: Вертикальные искры
 ```javascript
-export function drawPickupEffect(ctx, x, y) {
-    // Рисуем искры (4 линии)
-    ctx.strokeStyle = 'yellow';
-    ctx.lineWidth = 2;
-    
-    // Линия вверх
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x, y - 20);
-    ctx.stroke();
-    
-    // Линия вниз
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x, y + 20);
-    ctx.stroke();
-    
-    // Линия влево
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x - 20, y);
-    ctx.stroke();
-    
-    // Линия вправо
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + 20, y);
-    ctx.stroke();
+// Задание: нарисовать вертикальные линии эффекта
+window.drawVerticalSparks = function(ctx, x, y) {
+    // TODO: Две жёлтые линии: вверх и вниз от точки
+    // Используй: strokeStyle = 'yellow', lineWidth = 2
+    // moveTo(x,y) -> lineTo(x, y-20) и moveTo(x,y) -> lineTo(x, y+20)
 }
 ```
-**Что освоят:**
-- Рисование линий (`moveTo`, `lineTo`, `stroke`)
-- Работа с углами (пока просто линии)
 
-##### Команда Integration & QA
-**Задание:**
-1. Убедиться, что все правильно импортируют функции
-2. В `main.js` добавить вызовы всех функций:
-   ```javascript
-   import { drawPlayer } from './core.js';
-   import { drawHungerHealth } from './ui.js';
-   import { drawEnemy } from './ai.js';
-   import { drawTree } from './graphics.js';
-   import { drawPickupEffect } from './effects.js';
-   
-   function gameLoop() {
-       ctx.clearRect(0, 0, canvas.width, canvas.height);
-       
-       // Рисуем всё (порядок важен!)
-       drawTree(ctx, 200, 300);
-       drawTree(ctx, 500, 400);
-       drawEnemy(ctx, 300, 200, 'spider');
-       drawEnemy(ctx, 600, 350, 'hound');
-       drawPlayer(ctx, 400, 300);
-       drawPickupEffect(ctx, 450, 250);
-       drawHungerHealth(ctx, 75, 60); // голод 75, здоровье 60
-       
-       requestAnimationFrame(gameLoop);
-   }
-   ```
-3. Помогать всем с Git
-4. Проверить, что после мержа всё работает
+##### Участник 2: Горизонтальные искры
+```javascript
+// Задание: нарисовать горизонтальные линии эффекта
+window.drawHorizontalSparks = function(ctx, x, y) {
+    // TODO: Две жёлтые линии: влево и вправо от точки
+    // moveTo(x,y) -> lineTo(x-20, y) и moveTo(x,y) -> lineTo(x+20, y)
+}
+```
 
-#### Этап 4. Коммит, пуш и PR (10 мин)
+##### Участник 3: Объединение
+```javascript
+// Задание: собрать все искры вместе
+window.drawPickupEffect = function(ctx, x, y) {
+    // TODO: Вызвать обе функции выше
+    window.drawVerticalSparks(ctx, x, y);
+    window.drawHorizontalSparks(ctx, x, y);
+}
+```
 
-> "Теперь так же, как на прошлом занятии:"
+---
+
+### Команда Integration & QA (2-3 человека)
+
+**Файл:** `js/main.js`
+
+##### Участник 1: Игрок и деревья
+```javascript
+// Задание: добавить вызовы игрока и деревьев в gameLoop
+// После "ЗДЕСЬ БУДУТ ВЫЗОВЫ ФУНКЦИЙ" добавить:
+drawTree(ctx, 200, 300);
+drawTree(ctx, 500, 400);
+drawPlayer(ctx, 400, 300);
+```
+
+##### Участник 2: Враги и эффекты
+```javascript
+// Задание: добавить врагов и эффект подбора
+// В gameLoop после кода первого участника добавить:
+drawEnemy(ctx, 300, 200, 'spider');
+drawEnemy(ctx, 600, 350, 'hound');
+drawPickupEffect(ctx, 450, 250);
+```
+
+##### Участник 3: Интерфейс
+```javascript
+// Задание: добавить полоски здоровья и голода
+// В gameLoop последними добавить:
+drawHungerHealth(ctx, 75, 60);
+```
+
+**Также Integration & QA помогают всем с Git и проверяют PR!**
+
+---
+
+#### Этап 4. Коммит и PR (7 мин)
+
+> "Каждый делает свой коммит:"
+
 ```bash
-git add .
-git commit -m "feat: add [что-то] drawing function"
-git push origin feature/...
+# Проверяем что изменили
+git status
+
+# Добавляем файл
+git add js/название-файла.js
+
+# Делаем коммит (ВАЖНО: понятное название!)
+git commit -m "feat: add [что именно сделали]"
+
+# Пушим
+git push origin feature/название-ветки
+
 # Открываем PR на GitHub
 ```
 
-### 05 мин: Подведение итогов
+#### Этап 5. Ревью и мерж (5 мин)
 
-**Открываю финальную версию на экране:**
-> "Посмотрите, что у нас получилось! На одном canvas мы собрали рисунки от всех команд. Это и есть наша будущая игра.
+> "Integration & QA проверяют PR и мержат. Когда все PR смержены, показываю финальный результат:"
+
+```bash
+# Обновляем develop
+git checkout develop
+git pull origin develop
+```
+
+**Открываю `index.html` в браузере - видим полную картину!**
+
+---
+
+## Итог (5 мин)
+
+> "Посмотрите, что получилось! Каждый из вас добавил свой маленький кусочек, и вместе мы создали первую версию игры.
 >
-> **Что мы освоили за два занятия:**
-> - ✅ Git: клонирование, ветки, коммиты, пуши, PR
-> - ✅ Работу в команде через GitHub
-> - ✅ Основы canvas
-> - ✅ Разделение кода на модули
-> - ✅ Первый визуальный результат
+> **Что мы освоили:**
+> - ✅ Каждый сделал свой коммит
+> - ✅ Научились работать в одной кодовой базе
+> - ✅ Познакомились с canvas
+> - ✅ Увидели, как из кусочков собирается целое
 >
 > **Домашнее задание:**
-> 1. Поэкспериментируйте со своими функциями: поменяйте цвета, размеры, положение
-> 2. Откройте PR с улучшениями
-> 3. Подумайте, какие данные (массивы, объекты) нам понадобятся для хранения состояния игры"
+> 1. Поэкспериментируйте с параметрами в своих функциях
+> 2. Попробуйте добавить новый элемент (например, камень или цветок)
+> 3. Откройте PR с улучшением"
 
 ---
