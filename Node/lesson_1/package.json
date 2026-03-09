@@ -1,0 +1,13 @@
+{
+    "name": "notes-app",
+    "version": "1.0.0",
+    "description": "Приложение для заметок с сохранением в файл",
+    "main": "notes-file.js",
+    "scripts": {
+      "start": "node notes-file.js",
+      "dev": "node notes-file.js"
+    },
+    "keywords": ["notes", "file", "storage"],
+    "author": "Твое имя",
+    "license": "MIT"
+  }
