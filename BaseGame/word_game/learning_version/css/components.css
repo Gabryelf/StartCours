@@ -1,0 +1,27 @@
+.mode-btn {
+    background: rgb(110, 22, 224);
+    border: none;
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    animation: fadeIn 0.3s backwards;
+}
+
+.mode-btn:first-child {
+    animation-delay: 0.1s;
+}
+
+.mode-btn:last-child {
+    animation-delay: 0.2s;
+}
+
+.mode-btn:active {
+    transform: scale(0.98);
+}
+
+.mode-btn:hover {
+    background-color: #6f18c0;
+}

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Wonders</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; background: #1e293b; color: white; height: 100vh; }
+        .screen { display: none; height: 100%; width: 100%; position: fixed; top: 0; left: 0; }
+        .screen.active { display: flex; flex-direction: column; }
+        
+        /* Главный экран */
+        #mainScreen { justify-content: center; align-items: center; padding: 20px; }
+        .logo { text-align: center; margin-bottom: 40px; }
+        .logo h1 { font-size: 2rem; margin-bottom: 10px; }
+        .mode-buttons { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; }
+        .mode-btn { background: #374151; border: none; color: white; padding: 15px; border-radius: 10px; text-align: left; }
+        .mode-btn:active { background: #4b5563; }
+        
+        /* Игровой экран */
+        #gameScreen { padding: 10px; }
+        .game-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+        .back-btn { background: none; border: none; color: white; font-size: 1.2rem; }
+        .stats { display: flex; gap: 15px; }
+        .stat { display: flex; align-items: center; gap: 5px; }
+        
+        .words-area { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .word-row { display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; }
+        .letter-cell { width: 40px; height: 40px; border: 2px solid #4b5563; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .letter-cell.revealed { background: #059669; }
+        
+        .input-area { padding: 20px 0; }
+        .current-input { display: flex; justify-content: center; gap: 5px; margin-bottom: 20px; min-height: 40px; }
+        .input-letter { width: 40px; height: 40px; background: #374151; display: flex; align-items: center; justify-content: center; border-radius: 5px; }
+        
+        .circle-input { position: relative; width: 220px; height: 220px; margin: 0 auto; }
+        .circle-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .circle-letter { position: absolute; width: 40px; height: 40px; background: #374151; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        
+        /* Результаты */
+        #resultScreen { justify-content: center; align-items: center; padding: 20px; text-align: center; }
+        .result-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .action-btn { padding: 12px 20px; border: none; border-radius: 10px; color: white; }
+        .next-btn { background: #3b82f6; }
+        .menu-btn { background: #6b7280; }
+        
+        /* Всплывающее сообщение */
+        .floating-message { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 5px; animation: fadeOut 2s forwards; }
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Главный экран -->
+    <div id="mainScreen" class="screen active">
+        <div class="logo">
+            <h1>WORD WONDERS</h1>
+            <p>Собирай слова из букв</p>
+        </div>
+        
+        <div class="mode-buttons">
+            <button id="infiniteMode" class="mode-btn">
+                <div>Бесконечная игра</div>
+                <div style="font-size: 0.9rem; opacity: 0.8;">Уровни со сложностью</div>
+            </button>
+            
+            <button id="dailyMode" class="mode-btn">
+                <div>Слово дня</div>
+                <div style="font-size: 0.9rem; opacity: 0.8;">Новая тема каждый день</div>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Игровой экран -->
+    <div id="gameScreen" class="screen">
+        <div class="game-header">
+            <button id="backBtn" class="back-btn">←</button>
+            <div class="stats">
+                <div class="stat">🎯 <span id="currentLevel">1</span></div>
+                <div class="stat">⭐ <span id="score">0</span></div>
+                <div class="stat">❤️ <span id="attempts">0</span></div>
+            </div>
+            <button id="resetBtn" class="back-btn">↺</button>
+        </div>
+        
+        <div class="words-area">
+            <div id="wordsGrid"></div>
+            <div style="text-align: center; margin-top: 20px;" id="wordInfo"></div>
+        </div>
+        
+        <div class="input-area">
+            <div id="currentInput" class="current-input"></div>
+            <div class="circle-input" id="circleInput"></div>
+        </div>
+    </div>
+    
+    <!-- Экран результатов -->
+    <div id="resultScreen" class="screen">
+        <div id="resultIcon" style="font-size: 3rem; margin-bottom: 20px;"></div>
+        <h2 id="resultTitle"></h2>
+        <p id="resultMessage" style="margin: 10px 0;"></p>
+        <div style="margin: 20px 0;">
+            <div>Найдено слов: <span id="resultFound">0/0</span></div>
+            <div>Очков: <span id="resultScore">0</span></div>
+        </div>
+        <div class="result-buttons">
+            <button id="nextLevelBtn" class="action-btn next-btn">Следующий уровень</button>
+            <button id="backToMenuBtn" class="action-btn menu-btn">В меню</button>
+        </div>
+    </div>
+
+    <script>
+        // Простой список слов
+        const WORDS = ['КОТ', 'ДОМ', 'МАК', 'РОТ', 'ЛЕС', 'СОН', 'НОС', 'РАК', 'КОЗА', 'ЛИСА', 'МОРЕ', 'РЕКА'];
+        
+        // Состояние игры
+        let gameState = {
+            mode: 'infinite',
+            level: 1,
+            score: 0,
+            attempts: 5,
+            currentInput: [],
+            foundWords: [],
+            levelData: null
+        };
+        
+        // Утилиты
+        const Utils = {
+            shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); },
+            unique(arr) { return [...new Set(arr)]; }
+        };
+        
+        // Генератор уровней
+        const LevelGenerator = {
+            generate(level) {
+                // Выбираем 3-5 слов
+                const wordCount = Math.min(3 + Math.floor(level / 3), 5);
+                const selectedWords = Utils.shuffle(WORDS).slice(0, wordCount);
+                
+                // Собираем все буквы
+                let allLetters = selectedWords.join('').split('');
+                
+                // Берем уникальные буквы для круга (макс 8)
+                let circleLetters = Utils.unique(allLetters);
+                if (circleLetters.length > 8) {
+                    circleLetters = circleLetters.slice(0, 8);
+                }
+                
+                return {
+                    words: selectedWords,
+                    letters: Utils.shuffle(circleLetters),
+                    allLetters: allLetters
+                };
+            }
+        };
+        
+        // Интерфейс
+        const UI = {
+            showScreen(id) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+            },
+            
+            updateGameScreen() {
+                document.getElementById('currentLevel').textContent = gameState.level;
+                document.getElementById('score').textContent = gameState.score;
+                document.getElementById('attempts').textContent = gameState.attempts;
+                document.getElementById('wordInfo').textContent = 
+                    `Найдено слов: ${gameState.foundWords.length}/${gameState.levelData.words.length}`;
+                
+                // Рисуем слова
+                const grid = document.getElementById('wordsGrid');
+                grid.innerHTML = '';
+                gameState.levelData.words.forEach(word => {
+                    const row = document.createElement('div');
+                    row.className = 'word-row';
+                    
+                    word.split('').forEach((letter, i) => {
+                        const cell = document.createElement('div');
+                        cell.className = 'letter-cell';
+                        if (gameState.foundWords.includes(word)) {
+                            cell.textContent = letter;
+                            cell.classList.add('revealed');
+                        }
+                        row.appendChild(cell);
+                    });
+                    grid.appendChild(row);
+                });
+                
+                // Рисуем текущий ввод
+                const input = document.getElementById('currentInput');
+                input.innerHTML = '';
+                gameState.currentInput.forEach(letter => {
+                    const div = document.createElement('div');
+                    div.className = 'input-letter';
+                    div.textContent = letter;
+                    input.appendChild(div);
+                });
+                
+                // Рисуем круг с буквами
+                const circle = document.getElementById('circleInput');
+                circle.innerHTML = '';
+                
+                const center = document.createElement('div');
+                center.className = 'circle-center';
+                center.textContent = '✓';
+                circle.appendChild(center);
+                
+                const letters = gameState.levelData.letters;
+                letters.forEach((letter, i) => {
+                    const angle = (i / letters.length) * 2 * Math.PI;
+                    const x = 110 + 75 * Math.cos(angle);
+                    const y = 110 + 75 * Math.sin(angle);
+                    
+                    const btn = document.createElement('div');
+                    btn.className = 'circle-letter';
+                    btn.textContent = letter;
+                    btn.style.left = (x - 20) + 'px';
+                    btn.style.top = (y - 20) + 'px';
+                    circle.appendChild(btn);
+                });
+            },
+            
+            showMessage(text) {
+                const msg = document.createElement('div');
+                msg.className = 'floating-message';
+                msg.textContent = text;
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 2000);
+            },
+            
+            showResult(success) {
+                if (success) {
+                    document.getElementById('resultIcon').textContent = '🎉';
+                    document.getElementById('resultTitle').textContent = 'Уровень пройден!';
+                    document.getElementById('resultMessage').textContent = 'Отлично!';
+                    document.getElementById('nextLevelBtn').style.display = 'block';
+                } else {
+                    document.getElementById('resultIcon').textContent = '😔';
+                    document.getElementById('resultTitle').textContent = 'Попытки закончились';
+                    document.getElementById('resultMessage').textContent = 'Попробуйте еще раз!';
+                    document.getElementById('nextLevelBtn').style.display = 'none';
+                }
+                
+                document.getElementById('resultFound').textContent = 
+                    `${gameState.foundWords.length}/${gameState.levelData.words.length}`;
+                document.getElementById('resultScore').textContent = gameState.score;
+                
+                UI.showScreen('resultScreen');
+            }
+        };
+        
+        // Основная логика игры
+        const Game = {
+            start(mode) {
+                gameState.mode = mode;
+                gameState.currentInput = [];
+                gameState.foundWords = [];
+                gameState.levelData = LevelGenerator.generate(gameState.level);
+                gameState.attempts = 5;
+                
+                UI.updateGameScreen();
+                UI.showScreen('gameScreen');
+            },
+            
+            addLetter(letter) {
+                if (gameState.currentInput.length < 10) {
+                    gameState.currentInput.push(letter);
+                    UI.updateGameScreen();
+                }
+            },
+            
+            submit() {
+                const word = gameState.currentInput.join('');
+                if (word.length < 2) return;
+                
+                if (gameState.levelData.words.includes(word)) {
+                    if (!gameState.foundWords.includes(word)) {
+                        gameState.foundWords.push(word);
+                        gameState.score += word.length * 10;
+                        UI.showMessage(`+${word.length * 10} очков!`);
+                        
+                        if (gameState.foundWords.length === gameState.levelData.words.length) {
+                            setTimeout(() => UI.showResult(true), 500);
+                        }
+                    } else {
+                        UI.showMessage('Уже найдено!');
+                    }
+                } else {
+                    gameState.attempts--;
+                    UI.showMessage('Нет такого слова');
+                    
+                    if (gameState.attempts <= 0) {
+                        setTimeout(() => UI.showResult(false), 500);
+                    }
+                }
+                
+                gameState.currentInput = [];
+                UI.updateGameScreen();
+            },
+            
+            nextLevel() {
+                gameState.level++;
+                Game.start('infinite');
+            },
+            
+            reset() {
+                gameState.currentInput = [];
+                UI.updateGameScreen();
+            }
+        };
+        
+        // Обработчики событий
+        document.addEventListener('DOMContentLoaded', () => {
+            // Главный экран
+            document.getElementById('infiniteMode').addEventListener('click', () => Game.start('infinite'));
+            document.getElementById('dailyMode').addEventListener('click', () => Game.start('daily'));
+            
+            // Игровой экран
+            document.getElementById('backBtn').addEventListener('click', () => UI.showScreen('mainScreen'));
+            document.getElementById('resetBtn').addEventListener('click', () => Game.reset());
+            
+            // Круг с буквами
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('circle-letter')) {
+                    Game.addLetter(e.target.textContent);
+                }
+                if (e.target.classList.contains('circle-center')) {
+                    Game.submit();
+                }
+            });
+            
+            // Экран результатов
+            document.getElementById('nextLevelBtn').addEventListener('click', () => Game.nextLevel());
+            document.getElementById('backToMenuBtn').addEventListener('click', () => UI.showScreen('mainScreen'));
+            
+            // Клавиатура
+            document.addEventListener('keydown', (e) => {
+                if (document.getElementById('gameScreen').classList.contains('active')) {
+                    if (e.key === 'Enter') Game.submit();
+                    if (e.key === 'Backspace') gameState.currentInput.pop();
+                    if (/^[а-яА-Я]$/.test(e.key)) Game.addLetter(e.key.toUpperCase());
+                    UI.updateGameScreen();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

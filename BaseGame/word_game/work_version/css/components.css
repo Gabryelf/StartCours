@@ -1,0 +1,267 @@
+/* Кнопки */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    color: white;
+}
+
+.btn-secondary {
+    background: #374151;
+    color: white;
+}
+
+.mode-btn {
+    background: #374151;
+    border: none;
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    animation: fadeIn 0.3s backwards;
+}
+
+.mode-btn:first-child {
+    animation-delay: 0.1s;
+}
+
+.mode-btn:last-child {
+    animation-delay: 0.2s;
+}
+
+.mode-btn:active {
+    background: #4b5563;
+    transform: scale(0.98);
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.icon-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Игровой экран */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+.stats {
+    display: flex;
+    gap: 15px;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.1rem;
+}
+
+.words-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.words-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.word-row {
+    display: flex;
+    gap: 5px;
+}
+
+.letter-cell {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #4b5563;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.letter-cell.revealed {
+    background: linear-gradient(45deg, #059669, #10b981);
+    border-color: #059669;
+    transform: scale(1.05);
+}
+
+.word-info {
+    text-align: center;
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 10px;
+}
+
+/* Ввод */
+.input-area {
+    padding: 20px 0;
+}
+
+.current-input {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 25px;
+    min-height: 45px;
+}
+
+.input-letter {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(45deg, #374151, #4b5563);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.circle-input {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 0 auto;
+}
+
+.circle-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.circle-center:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+.circle-letter {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(45deg, #374151, #4b5563);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+}
+
+.circle-letter:active {
+    transform: scale(0.9);
+    background: #4b5563;
+}
+
+/* Результаты */
+.result-icon {
+    font-size: 4rem;
+    margin-bottom: 10px;
+}
+
+.result-title {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.result-message {
+    opacity: 0.9;
+    margin-bottom: 20px;
+}
+
+.result-stats {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.result-stats div {
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.result-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Всплывающие сообщения */
+.floating-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    z-index: 1000;
+    animation: fadeOut 2s forwards;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Wonders</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <div id="mainScreen" class="screen active">
+        <div class="logo">
+            <h1>WORD WONDERS</h1>
+            <p>Собирай слова из букв</p>
+        </div>
+        
+        <div class="mode-buttons">
+            <button id="infiniteMode" class="mode-btn">
+                <div>Бесконечная игра</div>
+                <div class="subtitle">Уровни со сложностью</div>
+            </button>
+            
+            <button id="dailyMode" class="mode-btn">
+                <div>Слово дня</div>
+                <div class="subtitle">Новая тема каждый день</div>
+            </button>
+        </div>
+    </div>
+    
+    <div id="gameScreen" class="screen">
+        <div class="game-header">
+            <button id="backBtn" class="icon-btn">←</button>
+            <div class="stats">
+                <div class="stat">🎯 <span id="currentLevel">1</span></div>
+                <div class="stat">⭐ <span id="score">0</span></div>
+                <div class="stat">❤️ <span id="attempts">5</span></div>
+            </div>
+            <button id="resetBtn" class="icon-btn">↺</button>
+        </div>
+        
+        <div class="words-area">
+            <div id="wordsGrid"></div>
+            <div class="word-info" id="wordInfo">Найди все слова</div>
+        </div>
+        
+        <div class="input-area">
+            <div id="currentInput" class="current-input"></div>
+            <div class="circle-input" id="circleInput"></div>
+        </div>
+    </div>
+    
+    <div id="resultScreen" class="screen">
+        <div id="resultIcon" class="result-icon">🎉</div>
+        <h2 id="resultTitle">Уровень пройден!</h2>
+        <p id="resultMessage">Отлично!</p>
+        
+        <div class="result-stats">
+            <div>Найдено слов: <span id="resultFound">0/0</span></div>
+            <div>Заработано очков: <span id="resultScore">0</span></div>
+            <div>Новый уровень: <span id="resultNextLevel">2</span></div>
+        </div>
+        
+        <div class="result-buttons">
+            <button id="nextLevelBtn" class="btn btn-primary">Следующий уровень</button>
+            <button id="backToMenuBtn" class="btn btn-secondary">В меню</button>
+        </div>
+    </div>
+
+    <script src="data/words.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
