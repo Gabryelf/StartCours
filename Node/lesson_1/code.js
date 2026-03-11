@@ -8,6 +8,8 @@ const readline = require('readline');
 const helpers = require('./utils/helpers');
 // вызов кастомного декоратора
 const Decorator = require('./utils/decorator');
+// вызов менеджера сохранений
+const { saveNotes, loadNotes } = require('./utils/fileManager');
 // создаем на основе строки ввода удобный интерфейс - вопрос / ответ в консоли
 const rl = readline.createInterface({
     input: process.stdin,
@@ -16,7 +18,7 @@ const rl = readline.createInterface({
 // имя проекта - название приложения
 const PROJECT_NAME = "Book_Note";
 // заметки
-let entries = [];
+let entries = loadNotes();
 
 // функция приветствия пользователя
 const showWelcome = () => {
@@ -36,6 +38,7 @@ const addEntry = () => {
             };
         
             entries.push(newEntry);
+            saveNotes(entries);
             const stats = helpers.getStats(entries);
 
             console.log('Ваша запись сохранена!');
@@ -101,6 +104,7 @@ const deleteEntry = () => {
         else if(num > 0 && num <= entries.length){
             entries.splice(num - 1, 1);
             entries = helpers.reindexIds(entries);
+            saveNotes(entries);
             const stats = helpers.getStats(entries);
             console.log(`Теперь заметок: ${stats.total}`);
         }
