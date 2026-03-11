@@ -1,9 +1,13 @@
 // приложение для работы с заметками в консоле с помощью node на javascript
 // работаем со стрелочными функциями, строкой ввода и массивами 
-// версия 002 дата обновления 10.03.2026
+// версия 003 дата обновления 11.03.2026
 
 // импортируем библиотеку для работы со строкой ввода
 const readline = require('readline');
+// вызов кастомных вспомогательных функций
+const helpers = require('./utils/helpers');
+// вызов кастомного декоратора
+const Decorator = require('./utils/decorator');
 // создаем на основе строки ввода удобный интерфейс - вопрос / ответ в консоли
 const rl = readline.createInterface({
     input: process.stdin,
@@ -13,60 +17,46 @@ const rl = readline.createInterface({
 const PROJECT_NAME = "Book_Note";
 // заметки
 let entries = [];
+
 // функция приветствия пользователя
 const showWelcome = () => {
-    console.log("\n");
-    console.log("=".repeat(30));
-    console.log(PROJECT_NAME);
-    console.log("=".repeat(30));
+    Decorator.welcome(PROJECT_NAME);
 };
+
+
 // функция добавления заметки
 const addEntry = () => {
-    rl.question('О чем вы хотите написать? Задайте заголовок', (title) => {
-        rl.question('Запишите ваши мысли!', (content) => {
+    rl.question('О чем вы хотите написать? Задайте заголовок: ', (title) => {
+        rl.question('Запишите ваши мысли: ', (content) => {
             const newEntry = {
                 id: entries.length + 1,
                 name: title,
                 content: content,
-                date: new Date().toLocaleString()
+                date: helpers.formatDate()
             };
         
+            entries.push(newEntry);
+            const stats = helpers.getStats(entries);
 
-        entries.push(newEntry);
+            console.log('Ваша запись сохранена!');
+            console.log(`Всего записей: ${stats.total}`);
 
-        console.log('Ваша запись сохранена!');
-        console.log(`Всего записей  ${entries.length}`);
-
-        showMenu();
+            showMenu();
         });
     });
 };
+
 // функция показа всех заметок
 const showEntries = () => {
-    console.log('\n--- Все записи ---');
-
-    if(entries.length === 0){
-        console.log(`Пока в ${PROJECT_NAME} пусто!`);
-    }else{
-        entries.forEach((entry) => {
-            console.log(`\n[${entry.id}] ${entry.name}`);
-            console.log(`  ${entry.date}`);
-            console.log(`  ${entry.content}`);
-            console.log('-'.repeat(30));
-        });
-    }
-
+    Decorator.showAllEntries(entries);
     showMenu();
 };
+
 // функция показа меню для выбора действия
 const showMenu = () => {
-    console.log("\n --- Выберите действие для продолжения ---");
-    console.log("1. Добавить запись");
-    console.log("2. Посмотреть все записи");
-    console.log("3. Выход из программы");
-    console.log("4. Удаление по выбору");
+    Decorator.showMenu(PROJECT_NAME);
 
-    rl.question('Пункт выбора 1 - 3', (choice) => {
+    rl.question('Ваш выбор (1-4): ', (choice) => {
         switch(choice){
             case '1':
                 addEntry();
@@ -75,50 +65,50 @@ const showMenu = () => {
                 showEntries();
                 break;
             case '3':
-                console.log("Завершаем программу! До свидания!");
+                Decorator.goodbye(PROJECT_NAME);
                 rl.close();
                 break;
             case '4':
                 deleteEntry();
                 break;
             default:
-                console.log("Что то пошло не так... выходим в меню!");
+                console.log("Неверный выбор!");
                 showMenu();
                 break;
         }
     });
-
 };
-// функция удаления заметки
+
+// функция удаления заметки (с автоматической перенумерацией)
 const deleteEntry = () => {
-    if(entries.length === 0){
-        console.log("У вас нет подходящих заметок!");
+    if(!helpers.hasEntries(entries)){
+        console.log("Нет заметок для удаления!");
         showMenu();
         return;
     }
 
-    console.log("___ Все ваши заметки ___")
-    console.log(`Всего заметок ${entries.length}`)
+    console.log("\n--- Ваши заметки ---");
     entries.forEach((entry) => {
-        console.log(`[${entry.id}] * ${entry.name} * ${entry.date}`)
+        console.log(`[${entry.id}] ${entry.name}`);
     });
 
-    rl.question("Выберите номер заметки для удаления или 0 для отмены", (choice) => {
-
+    rl.question("\nНомер заметки для удаления (0 - отмена): ", (choice) => {
         const num = parseInt(choice);
+        
         if(num === 0){
-            console.log("Отмена удаления!");
+            console.log("Отмена");
         }
-        else if(num <= entries.length && num > 0){
+        else if(num > 0 && num <= entries.length){
             entries.splice(num - 1, 1);
-            console.log(`Заметка ${num} удалена`);
+            entries = helpers.reindexIds(entries);
+            const stats = helpers.getStats(entries);
+            console.log(`Теперь заметок: ${stats.total}`);
         }
         else{
-            console.log("Не правильный номер заметки!");
+            console.log("Неправильный номер!");
         }
         showMenu();
     });
-
 }
 
 showWelcome();
