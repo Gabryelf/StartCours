@@ -1,73 +1,118 @@
 const http = require('http');
 const fs = require('fs').promises;
 const path = require('path');
-const helper = require("./utils/helper");
-const fileManager = require("./utils/fileManager");
+
+const fileManager = require('./utils/fileManager');
+const helper = require('./utils/helper');
 
 let notes = [];
 
-// Инициализация
+// При старте сервера сразу загружаем заметки из файла (или пустой массив)
 (async () => {
-    notes = await fileManager.loadFile().catch(() => []);
+    try {
+        notes = await fileManager.loadFile();
+    } catch {
+        notes = [];
+    }
 })();
 
 const server = http.createServer(async (req, res) => {
     const { url, method } = req;
-    
-    if (url === '/favicon.ico') return res.end();
-    
+
+    // Игнорируем запрос favicon
+    if (url === '/favicon.ico') {
+        res.end();
+        return;
+    }
+
     try {
-        // Статика
+        // Главная страница
         if (url === '/' && method === 'GET') {
             const html = await fs.readFile(path.join(__dirname, 'index.html'), 'utf-8');
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(html);
+            return;
         }
-        else if (url === '/app.js' && method === 'GET') {
+
+        // Файл со скриптом
+        if (url === '/app.js' && method === 'GET') {
             const js = await fs.readFile(path.join(__dirname, 'app.js'), 'utf-8');
             res.writeHead(200, { 'Content-Type': 'application/javascript' });
             res.end(js);
+            return;
         }
+
+        // ────────────────────────────────────────────────
         // API
-        else if (url === '/api/notes' && method === 'GET') {
+        // ────────────────────────────────────────────────
+
+        // Получить все заметки
+        if (url === '/api/notes' && method === 'GET') {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify(notes));
+            return;
         }
-        else if (url === '/api/notes' && method === 'POST') {
+
+        // Добавить новую заметку
+        if (url === '/api/notes' && method === 'POST') {
             let body = '';
             req.on('data', chunk => body += chunk);
             req.on('end', async () => {
-                const { title, content } = JSON.parse(body);
-                
-                notes.push({
-                    id: notes.length + 1,
-                    title, 
-                    content,
-                    date: new Date().toLocaleString()
-                });
-                
-                notes = helper.reindexId(notes);
-                await fileManager.saveFile(notes);
-                res.end(JSON.stringify({ success: true }));
+                try {
+                    const { title, content } = JSON.parse(body);
+
+                    // Добавляем заметку
+                    notes.push({
+                        id: notes.length + 1,
+                        title,
+                        content,
+                        date: new Date().toLocaleString()
+                    });
+
+                    // Переиндексируем id (1,2,3...)
+                    notes = helper.reindexId(notes);
+
+                    // Сохраняем на диск
+                    await fileManager.saveFile(notes);
+
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ success: true }));
+                } catch {
+                    res.writeHead(400);
+                    res.end(JSON.stringify({ success: false, error: 'Bad request' }));
+                }
             });
+            return;
         }
-        else if (url.startsWith('/api/notes/') && method === 'DELETE') {
+
+        // Удалить заметку по id
+        if (url.startsWith('/api/notes/') && method === 'DELETE') {
             const id = parseInt(url.split('/')[3]);
-            
+
             if (id > 0 && id <= notes.length) {
-                notes.splice(id - 1, 1);
-                notes = helper.reindexId(notes);
-                await fileManager.saveFile(notes);
+                notes.splice(id - 1, 1);           // удаляем
+                notes = helper.reindexId(notes);   // обновляем номера
+                await fileManager.saveFile(notes); // сохраняем
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ success: true }));
+            } else {
+                res.writeHead(404);
+                res.end(JSON.stringify({ success: false, error: 'Note not found' }));
             }
+            return;
         }
-        else {
-            res.writeHead(404);
-            res.end('Not Found');
-        }
-    } catch (error) {
+
+        // Всё остальное — 404
+        res.writeHead(404);
+        res.end('Not Found');
+    } catch (err) {
+        console.error(err);
         res.writeHead(500);
         res.end('Server Error');
     }
 });
 
-server.listen(3000, () => console.log('http://localhost:3000'));
+server.listen(3000, () => {
+    console.log('Сервер запущен → http://localhost:3000');
+});
