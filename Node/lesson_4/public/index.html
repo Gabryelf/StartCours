@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Менеджер заметок</title>
+</head>
+<body>
+    <h1>Менеджер заметок</h1>
+    
+    <div id="stats">Загрузка...</div>
+    
+    <div style="margin: 20px 0;">
+        <button onclick="showNotes()">Показать заметки</button>
+        <button onclick="addNote()">Добавить заметку</button>
+        <button onclick="editNote()">Редактировать заметку</button>
+        <button onclick="deleteNote()">Удалить заметку</button>
+    </div>
+    
+    <div id="content" style="border-top: 2px solid #eee; padding-top: 20px;">
+        <!-- show notes conteiner -->
+    </div>
+
+    <script src="/api/app.js"></script>
+</body>
+</html>
