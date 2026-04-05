@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📦 Учебное расширение</h1>
+    <p>Версия: <span id="version">--</span></p>
+    
+    <div class="section">
+      <h3>📊 Информация о странице</h3>
+      <button id="getInfoBtn">Получить информацию</button>
+      <div id="pageInfo" class="info-box"></div>
+    </div>
+    
+    <div class="section">
+      <h3>🎨 Визуальные эффекты</h3>
+      <button id="highlightLinksBtn">Подсветить ссылки</button>
+      <button id="addPanelBtn">Добавить панель</button>
+      <button id="changeBgBtn">Сменить фон</button>
+    </div>
+    
+    <div class="section">
+      <h3>📝 Логи</h3>
+      <div id="output" class="info-box"></div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
