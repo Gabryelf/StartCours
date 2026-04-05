@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Working Proxy VPN",
+    "version": "2.0",
+    "description": "Рабочий прокси-менеджер с автоматическим обновлением списка серверов",
+    "permissions": ["proxy", "storage"],
+    "host_permissions": ["<all_urls>"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_title": "Working Proxy"
+    }
+  }
