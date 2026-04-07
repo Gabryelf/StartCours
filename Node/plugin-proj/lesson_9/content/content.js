@@ -71,7 +71,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case "PING":
       sendResponse({ pong: true });
       break;
-      
+
     case "GET_PAGE_INFO":
       sendResponse(getPageInfo());
       break;
