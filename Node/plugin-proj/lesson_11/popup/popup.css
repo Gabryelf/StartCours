@@ -1,0 +1,14 @@
+body{
+    text-align: center;
+    width: 200px;
+}
+
+button{
+    width: 100%;
+    color: rgb(255, 255, 255);
+    background: linear-gradient(rgb(71, 114, 255), rgb(5, 247, 186));
+    border-radius: 20px;
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
