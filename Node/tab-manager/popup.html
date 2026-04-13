@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Tab Manager</h1>
+      <div class="sub">Manage your tabs efficiently</div>
+    </div>
+    
+    <div class="stat-card">
+      <div class="stat-row">
+        <span class="stat-label">Open tabs</span>
+        <span class="stat-value" id="tabCount">--</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Estimated memory</span>
+        <span class="stat-value" id="memoryUsage">--</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Duplicate tabs</span>
+        <span class="stat-value" id="duplicateCount">--</span>
+      </div>
+    </div>
+    
+    <button class="button" id="closeDuplicatesBtn">Close duplicate tabs</button>
+    <button class="button" id="refreshBtn">Refresh stats</button>
+    
+    <div class="footer">
+      2026 
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
