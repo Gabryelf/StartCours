@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="input-group">
+        <label for="message">Ваше сообщение:</label>
+        <input type="text" id="message" placeholder="Например: Привет, мир!" autocomplete="off">
+    </div>
+
+    <button onclick="sendMessage()">Отправить на сервер ✨</button>
+
+    <div class="result" id="result">
+        <div class="result-item">
+            <span class="result-label">Длина текста:</span>
+            <span class="result-value" id="length"></span>
+        </div>
+        <div class="result-item">
+            <span class="result-label">Количество слов:</span>
+            <span class="result-value" id="wordCount"></span>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+    
+</body>
+</html>
