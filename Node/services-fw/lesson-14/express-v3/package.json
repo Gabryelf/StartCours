@@ -1,0 +1,20 @@
+{
+  "name": "microservices-workshop",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start:auth": "node auth_service/server.js",
+    "start:profile": "node profile_service/server.js",
+    "dev:auth": "node --watch auth_service/server.js",
+    "dev:profile": "node --watch profile_service/server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "fastify": "^4.28.0",
+    "@fastify/postgres": "^5.0.0",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1"
+  }
+}
