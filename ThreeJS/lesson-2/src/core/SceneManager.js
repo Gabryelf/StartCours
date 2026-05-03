@@ -19,8 +19,33 @@ export class SceneManager {
             );
         }    
         this._createStars();
+        this._createGrid();
         return this.scene;
      }
+
+     _createGrid() {
+        const gridHelper = new THREE.GridHelper(20, 20, 0x4488ff, 0x335588);
+        gridHelper.position.y = -1.2;
+        gridHelper.material.transparent = true;
+        gridHelper.material.opacity = 0.3;
+        this.scene.add(gridHelper);
+        
+        const floorPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(12, 12),
+            new THREE.MeshStandardMaterial({
+                color: 0x112233,
+                roughness: 0.8,
+                metalness: 0.2,
+                transparent: true,
+                opacity: 0.2,
+                side: THREE.DoubleSide
+            })
+        );
+        floorPlane.rotation.x = -Math.PI / 2;
+        floorPlane.position.y = -1.1;
+        floorPlane.receiveShadow = true; 
+        this.scene.add(floorPlane);
+    }
 
     _createStars() {
         const { count, size, color, range } = SCENE_CONFIG.stars;

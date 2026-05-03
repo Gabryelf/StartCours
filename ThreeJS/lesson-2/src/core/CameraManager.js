@@ -32,7 +32,42 @@ export class CameraManager {
         return this.camera;
     }
 
+    createControls() {
+        this.controls = new OrbitControls(this.camera, this.rendererDomElement);
+        
+        this.controls.enableDamping = CAMERA_CONFIG.controls.enableDamping;
+        this.controls.dampingFactor = CAMERA_CONFIG.controls.dampingFactor;
+        this.controls.autoRotate = CAMERA_CONFIG.controls.autoRotate;
+        this.controls.enableZoom = CAMERA_CONFIG.controls.enableZoom;
+        this.controls.enablePan = CAMERA_CONFIG.controls.enablePan;
+        this.controls.zoomSpeed = CAMERA_CONFIG.controls.zoomSpeed;
+        this.controls.rotateSpeed = CAMERA_CONFIG.controls.rotateSpeed;
+        
+        this.controls.target.set(
+            CAMERA_CONFIG.target.x,
+            CAMERA_CONFIG.target.y,
+            CAMERA_CONFIG.target.z
+        );
+        
+        return this.controls;
+    }
+
+    update() {
+        if (this.controls) {
+            this.controls.update();
+        }
+    }
+
+    onWindowResize() {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+    }
+
     getCamera() {
         return this.camera;
+    }
+
+    getControls() {
+        return this.controls;
     }
 }
