@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Урок 1: Модульная сцена</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- UI элементы поверх 3D сцены -->
+    <div id="info">
+        <h1>🚀 УРОК 1: Модульная сцена</h1>
+        <p>Сцена | Камера | Звёзды |</p>
+    </div>
+    <div class="status">
+        ✅ Сцена загружена | Запуск: npx serv
+    </div>
+
+    <!-- Import Map: говорит браузеру, где искать модули -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    
+    <!-- Главный модуль приложения -->
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
