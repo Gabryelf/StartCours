@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>JS Roadmap | Изучай JavaScript стильно</title>
+    
+    <!-- Bootstrap 5 CSS + Icons + Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: #f8fafc;
+            scroll-behavior: smooth;
+        }
+        /* Градиент для hero-секции */
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-gradient::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, rgba(0,0,0,0) 70%);
+            animation: slowRotate 25s infinite linear;
+        }
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        /* Кастомный стиль карточек */
+        .resource-card {
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: none;
+            border-radius: 28px;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(0px);
+            box-shadow: 0 12px 28px -8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02);
+        }
+        .resource-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 40px -12px rgba(0,0,0,0.2);
+            background: white;
+        }
+        .badge-free {
+            background: #10b981;
+            color: white;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            letter-spacing: 0.3px;
+        }
+        .badge-premium {
+            background: #f59e0b;
+            color: #2c1a00;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+        }
+        .btn-figma-style {
+            border-radius: 100px;
+            padding: 10px 20px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .btn-outline-glass {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+        }
+        .btn-outline-glass:hover {
+            background: rgba(56,189,248,0.3);
+            border-color: #38bdf8;
+            color: white;
+        }
+        .section-title {
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(120deg, #0f172a, #2d3a5e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .footer-links a {
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .footer-links a:hover {
+            color: #38bdf8 !important;
+            transform: translateX(4px);
+            display: inline-block;
+        }
+        .cta-card {
+            background: linear-gradient(115deg, #ffffff 0%, #f1f5f9 100%);
+            border-radius: 2rem;
+            border: none;
+        }
+        .icon-bg {
+            width: 48px;
+            height: 48px;
+            background: #eef2ff;
+            border-radius: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+        }
+        @media (max-width: 768px) {
+            .resource-card {
+                margin-bottom: 1rem;
+            }
+            .hero-gradient h1 {
+                font-size: 2.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top py-3" style="background: rgba(15,23,42,0.85); backdrop-filter: blur(12px);" data-bs-theme="dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-4" href="#">
+            <i class="bi bi-braces text-info me-2"></i>JS<span class="text-info">ROAD</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-2">
+                <li class="nav-item"><a class="nav-link active" href="#resources">Ресурсы</a></li>
+                <li class="nav-item"><a class="nav-link" href="#practice">Практика</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tools">Инструменты</a></li>
+                <li class="nav-item"><a class="btn btn-outline-info btn-sm rounded-pill px-3" href="#roadmap-tips">Советы</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero секция -->
+<header class="hero-gradient min-vh-100 d-flex align-items-center pt-5">
+    <div class="container py-5 position-relative z-1">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-7 text-white">
+                <span class="badge bg-info bg-opacity-25 text-info mb-3 px-3 py-2 rounded-pill fw-semibold">
+                    <i class="bi bi-lightning-charge-fill me-1"></i> Полный гайд 2026
+                </span>
+                <h1 class="display-3 fw-bold mb-4 lh-1">Изучай JavaScript <br> как <span class="text-info">профи</span></h1>
+                <p class="lead mb-4 opacity-90 w-75">Лучшие сайты, тренажёры и документация — всё, чтобы прокачать код с нуля до middle. Интерактив, теория и реальные задачи.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#resources" class="btn btn-info btn-lg rounded-pill px-4 fw-semibold"><i class="bi bi-compass me-2"></i>Начать учиться</a>
+                    <a href="#practice" class="btn btn-outline-glass btn-lg rounded-pill px-4"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Практика</a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <div class="bg-white bg-opacity-10 p-3 rounded-5 backdrop-blur-sm" style="backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2);">
+                    <i class="bi bi-filetype-js display-1 text-info"></i>
+                    <p class="text-white-50 mt-2 mb-0">.map() .filter() async/await</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Основные ресурсы -->
+<main class="container py-5 mt-4" id="resources">
+    <div class="text-center mb-5">
+        <span class="badge bg-dark text-info bg-opacity-10 px-3 py-2 rounded-pill">Коллекция</span>
+        <h2 class="section-title display-5 fw-bold mt-3">ТОП сайтов для JS</h2>
+        <p class="text-secondary w-75 mx-auto">Куда идти в первую очередь — проверенные платформы, учебники и задачи.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- learn.javascript.ru -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 p-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-bg"><i class="bi bi-book-half fs-3"></i></div>
+                        <span class="badge-free">Бесплатно ★</span>
+                    </div>
+                    <h5 class="card-title fw-bold fs-4">Современный учебник JS</h5>
+                    <p class="card-text text-secondary mt-2">Классика для русскоязычных. От основ до промисов, огромное количество задач. «Библия» фронтенда.</p>
+                    <a href="https://learn.javascript.ru" target="_blank" class="btn btn-dark btn-figma-style w-100 mt-3 rounded-pill">Перейти <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- JavaScript.info -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 p-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-bg"><i class="bi bi-globe2 fs-3"></i></div>
+                        <span class="badge-free">Free / EN</span>
+                    </div>
+                    <h5 class="card-title fw-bold fs-4">JavaScript.info</h5>
+                    <p class="card-text text-secondary mt-2">Оригинальный учебник с глубокими объяснениями. Лучший для понимания работы «под капотом».</p>
+                    <a href="https://javascript.info" target="_blank" class="btn btn-dark btn-figma-style w-100 mt-3 rounded-pill">Изучать <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- FreeCodeCamp -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 p-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-bg"><i class="bi bi-code-square fs-3"></i></div>
+                        <span class="badge-free">100% практика</span>
+                    </div>
+                    <h5 class="card-title fw-bold fs-4">FreeCodeCamp</h5>
+                    <p class="card-text text-secondary mt-2">Алгоритмы и структуры данных на JS. Сертификация, 200+ задач прямо в браузере.</p>
+                    <a href="https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/" target="_blank" class="btn btn-dark btn-figma-style w-100 mt-3 rounded-pill">Начать <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- Codewars -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 p-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-bg"><i class="bi bi-trophy fs-3"></i></div>
+                        <span class="badge-free">Ката / задачи</span>
+                    </div>
+                    <h5 class="card-title fw-bold fs-4">Codewars</h5>
+                    <p class="card-text text-secondary mt-2">Тренировка алгоритмического мышления. Тысячи «ката» на JavaScript от 8kyu до 1kyu.</p>
+                    <a href="https://www.codewars.com" target="_blank" class="btn btn-dark btn-figma-style w-100 mt-3 rounded-pill">Прокачать логику <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- MDN Web Docs -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 p-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-bg"><i class="bi bi-filetype-md fs-3"></i></div>
+                        <span class="badge-free">Дока</span>
+                    </div>
+                    <h5 class="card-title fw-bold fs-4">MDN Web Docs</h5>
+                    <p class="card-text text-secondary mt-2">Официальный справочник от Mozilla. Синтаксис, методы, браузерное API — источник истины.</p>
+                    <a href="https://developer.mozilla.org/ru/docs/Web/JavaScript" target="_blank" class="btn btn-dark btn-figma-style w-100 mt-3 rounded-pill">Читать документацию <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+        <!-- LeetCode (JS задачи) -->
+        <div class="col-md-6 col-lg-4">
+            <div class="resource-card card h-100 p-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="icon-bg"><i class="bi bi-puzzle fs-3"></i></div>
+                        <span class="badge-free">Алгоритмы</span>
+                    </div>
+                    <h5 class="card-title fw-bold fs-4">LeetCode</h5>
+                    <p class="card-text text-secondary mt-2">Тысячи алгоритмических задач, подготовка к собеседованиям. От Two Sum до сложных графов.</p>
+                    <a href="https://leetcode.com" target="_blank" class="btn btn-dark btn-figma-style w-100 mt-3 rounded-pill">Решать задачи <i class="bi bi-box-arrow-up-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Секция практика / игровые ресурсы -->
+<section id="practice" class="bg-white py-5">
+    <div class="container py-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <span class="badge bg-warning text-dark mb-2 px-3 py-2 rounded-pill"><i class="bi bi-joystick"></i> Геймификация</span>
+                <h2 class="display-5 fw-bold">Учись играя</h2>
+                <p class="lead text-secondary mt-3">Игровые платформы, где код управляет героем. Никакой скучной теории — сразу практика на JS.</p>
+                <div class="mt-4 d-flex flex-column gap-2">
+                    <div class="d-flex align-items-center gap-3 p-2"><i class="bi bi-check-circle-fill text-success fs-5"></i> <span>CodeCombat — пиши JS и проходи подземелья</span></div>
+                    <div class="d-flex align-items-center gap-3 p-2"><i class="bi bi-check-circle-fill text-success fs-5"></i> <span>JSRobot — управляй роботом через настоящие функции</span></div>
+                    <div class="d-flex align-items-center gap-3 p-2"><i class="bi bi-check-circle-fill text-success fs-5"></i> <span>Мгновенный фидбек и интерактивные уровни</span></div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4 hover-scale">
+                            <div class="card-body p-4">
+                                <i class="bi bi-controller fs-1 text-info"></i>
+                                <h5 class="fw-bold mt-3">CodeCombat</h5>
+                                <p class="text-secondary small">Учи JS, управляя героем в ролевой игре. Базовый геймплей бесплатный.</p>
+                                <a href="https://codecombat.com" target="_blank" class="stretched-link text-info fw-semibold">codecombat.com →</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-body p-4">
+                                <i class="bi bi-robot fs-1 text-warning"></i>
+                                <h5 class="fw-bold mt-3">JSRobot</h5>
+                                <p class="text-secondary small">Лабиринт, в котором робот выполняет твои команды: moveRight(), attack() — основы JS.</p>
+                                <a href="https://lab.reaal.me/jsrobot/" target="_blank" class="text-warning fw-semibold">Попробовать →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Инструменты / IDE sandbox и полезные ссылки -->
+<section id="tools" class="py-5" style="background: #f1f5f9;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <i class="bi bi-palette fs-1 text-secondary"></i>
+            <h2 class="section-title fw-bold display-6 mt-2">Инструменты как в Figma</h2>
+            <p class="text-secondary">Онлайн-песочницы, редакторы кода и тренажёры, чтобы писать JS мгновенно</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="cta-card card h-100 p-4 text-center">
+                    <i class="bi bi-brush fs-1 text-primary mx-auto mb-3"></i>
+                    <h5 class="fw-bold">CodePen</h5>
+                    <p>Быстрые эксперименты с HTML/CSS/JS. Идеально для прототипов.</p>
+                    <a href="https://codepen.io" target="_blank" class="btn btn-outline-dark rounded-pill mt-2">Открыть CodePen</a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cta-card card h-100 p-4 text-center">
+                    <i class="bi bi-window-sidebar fs-1 text-primary mx-auto mb-3"></i>
+                    <h5 class="fw-bold">JSFiddle</h5>
+                    <p>Тест сниппетов, шаринг кода, поддержка библиотек.</p>
+                    <a href="https://jsfiddle.net" target="_blank" class="btn btn-outline-dark rounded-pill mt-2">Открыть JSFiddle</a>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cta-card card h-100 p-4 text-center">
+                    <i class="bi bi-code-slash fs-1 text-primary mx-auto mb-3"></i>
+                    <h5 class="fw-bold">JS Bin</h5>
+                    <p>Мгновенный live-режим, отличная консоль для обучения.</p>
+                    <a href="https://jsbin.com" target="_blank" class="btn btn-outline-dark rounded-pill mt-2">Открыть JS Bin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Платные курсы + карточка с Udemy -->
+<section class="container my-5 pt-3" id="roadmap-tips">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="row g-0">
+                    <div class="col-md-4 bg-info bg-opacity-10 d-flex align-items-center justify-content-center p-4">
+                        <i class="bi bi-cup-hot-fill display-1 text-info"></i>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body p-4 p-lg-5">
+                            <h3 class="fw-bold">🔥 Платные курсы (но с лучшей структурой)</h3>
+                            <p class="text-secondary mt-2">Udemy — лучший выбор за 400-500 рублей по скидке: Иван Петриченко, Владилен Минин. Десятки часов практики, реальные проекты.</p>
+                            <div class="d-flex flex-wrap gap-3 mt-3">
+                                <a href="https://www.udemy.com/course/javascript_full/" target="_blank" class="btn btn-danger rounded-pill px-4"><i class="bi bi-play-circle"></i> Курс Петриченко</a>
+                                <a href="https://www.udemy.com/user/vladilen-minin/" target="_blank" class="btn btn-outline-secondary rounded-pill px-4">Курсы Минина</a>
+                                <a href="https://www.codecademy.com/learn/introduction-to-javascript" target="_blank" class="btn btn-outline-info rounded-pill px-4">Codecademy (intro)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Адаптивный совет "не скользить по сайтам" -->
+    <div class="alert alert-dark border-0 rounded-4 mt-5 p-4 d-flex flex-wrap align-items-center justify-content-between" style="background: #eef2ff;">
+        <div>
+            <i class="bi bi-lightbulb fs-2 me-3 float-start"></i>
+            <strong class="fs-5">Главный совет от разработчика:</strong><br>
+            <span>Не скользи по 10 сайтам — выбери <strong>learn.javascript.ru</strong> + задачи на <strong>FreeCodeCamp</strong> и доведи до автоматизма.</span>
+        </div>
+        <a href="https://www.codewars.com" class="btn btn-dark rounded-pill mt-2 mt-sm-0"><i class="bi bi-arrow-repeat"></i> Начни ката на Codewars</a>
+    </div>
+</section>
+
+<!-- Footer с подписью и соц. стилем -->
+<footer class="bg-dark text-white pt-5 pb-4 mt-4">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-md-5">
+                <i class="bi bi-braces fs-2 text-info"></i>
+                <h4 class="fw-semibold mt-2">JS<span class="text-info">ROAD</span></h4>
+                <p class="text-white-50">Стильная подборка лучших ресурсов для изучения JavaScript. Собрано с любовью к коду и образованию.</p>
+            </div>
+            <div class="col-md-3 offset-md-1">
+                <h6 class="text-info mb-3">Ресурсы</h6>
+                <ul class="list-unstyled footer-links">
+                    <li class="mb-2"><a href="https://learn.javascript.ru" target="_blank" class="text-white-50 text-decoration-none">Современный учебник</a></li>
+                    <li class="mb-2"><a href="https://developer.mozilla.org/ru/" target="_blank" class="text-white-50">MDN Web Docs</a></li>
+                    <li class="mb-2"><a href="https://leetcode.com" target="_blank" class="text-white-50">LeetCode</a></li>
+                    <li class="mb-2"><a href="https://www.freecodecamp.org" target="_blank" class="text-white-50">FreeCodeCamp</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6 class="text-info mb-3">Практика</h6>
+                <ul class="list-unstyled footer-links">
+                    <li class="mb-2"><a href="https://codewars.com" target="_blank" class="text-white-50">Codewars</a></li>
+                    <li class="mb-2"><a href="https://codecombat.com" target="_blank" class="text-white-50">CodeCombat</a></li>
+                    <li class="mb-2"><a href="https://javascript.info" target="_blank" class="text-white-50">JavaScript.info</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="mt-4 opacity-25">
+        <div class="text-center text-white-50 small">© 2026 JS Roadmap — вдохновлено дизайн-системой Figma & Bootstrap 5</div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
