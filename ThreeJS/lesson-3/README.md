@@ -11,42 +11,56 @@
 **Файл:** `src/config/lights.js`
 
 ```javascript
-export const LIGHTS_CONFIG = {
-    ambient: {
-        color: 0x404060,
-        intensity: 0.6
-    },
-    
-    main: {
-        type: 'directional',
-        color: 0xffffff,
-        intensity: 1.2,
-        position: { x: 5, y: 10, z: 7 },
-        castShadow: true,
-        shadowMapSize: 1024
-    },
-    
-    rim: {
-        type: 'directional',
-        color: 0x6688aa,
-        intensity: 0.8,
-        position: { x: -3, y: 2, z: -4 }
-    },
-    
-    fill: {
-        type: 'point',
-        color: 0x4466aa,
-        intensity: 0.3,
-        position: { x: 0, y: -2, z: 0 }
-    },
-    
-    back: {
-        type: 'point',
-        color: 0xffaa66,
-        intensity: 0.4,
-        position: { x: 0, y: 1, z: -5 }
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+export class ModelLoader {
+    constructor(scene) {
+        this.scene = scene;
+        this.loader = new GLTFLoader();
+        this.models = [];
+        this.currentModel = null;
     }
-};
+
+    async loadModels(modelsConfig) {
+        // Загружаем все модели параллельно
+        const promises = modelsConfig.map(async (config) => {
+            const gltf = await this.loader.loadAsync(config.url);
+            const model = gltf.scene;
+            model.scale.set(config.scale, config.scale, config.scale);
+            model.traverse(child => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+            model.visible = false;
+            return model;
+        });
+        
+        this.models = await Promise.all(promises);
+        this.models.forEach(model => this.scene.add(model));
+        
+        if (this.models.length) this.showModel(0);
+    }
+
+    showModel(index) {
+        if (this.currentModel) this.currentModel.visible = false;
+        this.currentModel = this.models[index];
+        this.currentModel.visible = true;
+    }
+
+    next() {
+        const currentIndex = this.models.indexOf(this.currentModel);
+        this.showModel((currentIndex + 1) % this.models.length);
+    }
+
+    prev() {
+        const currentIndex = this.models.indexOf(this.currentModel);
+        this.showModel((currentIndex - 1 + this.models.length) % this.models.length);
+    }
+
+}
 ```
 
 **Что мы сделали:** Описали 5 источников света:
