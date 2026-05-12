@@ -1,0 +1,513 @@
+body {
+    margin: 0;
+    overflow: hidden;          /* убираем скроллы */
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+}
+
+/* ИНФОРМАЦИОННАЯ ПАНЕЛЬ */
+#info {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.7);      /* полупрозрачный фон */
+    backdrop-filter: blur(10px);           /* размытие фона */
+    padding: 12px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #ffaa44;        /* акцент слева */
+    color: white;
+    pointer-events: none;                  /* клики проходят сквозь */
+    z-index: 100;
+}
+
+#info h1 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    color: #ffaa44;
+}
+
+#info p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+/* ПОДСКАЗКИ ПО УПРАВЛЕНИЮ */
+#controls {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #aaa;
+    font-family: monospace;
+    pointer-events: none;
+}
+
+/* СТАТУС */
+.status {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 10px;
+    color: #4f4;           /* ярко-зелёный */
+    font-family: monospace;
+}
+
+/* ПАНЕЛЬ УПРАВЛЕНИЯ МОДЕЛЯМИ */
+#model-panel {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 170, 68, 0.5);
+    z-index: 200;
+}
+
+.model-btn {
+    background: rgba(255, 170, 68, 0.2);
+    border: 1px solid #ffaa44;
+    color: #ffaa44;
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.model-btn:hover {
+    background: rgba(255, 170, 68, 0.5);
+    transform: scale(1.05);
+}
+
+.model-btn:active {
+    transform: scale(0.95);
+}
+
+#model-info {
+    text-align: center;
+    min-width: 150px;
+}
+
+#model-name {
+    display: block;
+    color: #ffaa44;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#model-status {
+    display: block;
+    font-size: 10px;
+    color: #aaa;
+}
+
+/* Индикатор загрузки */
+.loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    color: #ffaa44;
+    font-family: monospace;
+    z-index: 300;
+    display: none;
+}
+
+/* SERVER */
+
+/* МЕНЮ ОВЕРЛЕИ */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.menu-container {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(30, 20, 50, 0.9), rgba(10, 10, 20, 0.95));
+    padding: 40px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 170, 68, 0.5);
+    box-shadow: 0 0 50px rgba(255, 170, 68, 0.3);
+    min-width: 300px;
+}
+
+.glitch {
+    font-size: 48px;
+    text-shadow: 2px 2px 0 #ff00ff, -2px -2px 0 #00ffff;
+    animation: glitch 0.3s infinite;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+.menu-btn {
+    background: linear-gradient(135deg, #ffaa44, #ff6600);
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    margin: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.menu-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 170, 68, 0.8);
+}
+
+.menu-btn.danger {
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+}
+
+.input-field {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffaa44;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 25px;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* ЛОББИ */
+.lobby-container {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    min-width: 400px;
+}
+
+.players-list {
+    margin: 20px 0;
+    min-height: 200px;
+}
+
+.player-card {
+    background: rgba(255, 170, 68, 0.2);
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-host {
+    background: rgba(255, 170, 68, 0.4);
+    border-left: 3px solid #ffaa44;
+}
+
+/* ИГРОВОЙ HUD */
+#game-hud {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.stats-panel {
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ffaa44;
+    display: inline-block;
+}
+
+.ship-stats div {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.weapon-info {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ffaa44;
+}
+
+.weapon-message {
+    position: fixed;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #ffaa44;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    pointer-events: none;
+    display: none;
+}
+
+.cooldown-bar {
+    width: 100px;
+    height: 4px;
+    background: rgba(255,255,255,0.3);
+    margin-top: 5px;
+}
+
+.opponents-list {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 150px;
+}
+
+.opponent-card {
+    padding: 5px;
+    margin: 5px 0;
+    border-left: 2px solid #ff4444;
+}
+
+.opponent-health {
+    height: 3px;
+    background: #ff4444;
+    margin-top: 3px;
+}
+
+.pause-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid #ffaa44;
+    color: #ffaa44;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+.combat-log {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    max-width: 300px;
+}
+
+.hit-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+    pointer-events: none;
+    animation: hitFlash 0.2s ease-out;
+}
+
+@keyframes hitFlash {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+
+/* СТИЛИ ДЛЯ ВЫБОРА КОРАБЛЯ */
+.ship-stats-preview {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    font-size: 11px;
+    text-align: left;
+}
+
+.stat-line {
+    margin: 3px 0;
+}
+
+.weapon-preview {
+    margin-top: 8px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(255, 170, 68, 0.3);
+    font-size: 10px;
+    color: #ffaa44;
+}
+
+.confirm-btn {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #44ff44, #00aa00);
+    border: none;
+    color: white;
+    padding: 15px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 200;
+    box-shadow: 0 0 20px rgba(68, 255, 68, 0.5);
+}
+
+.confirm-btn:hover {
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 0 30px rgba(68, 255, 68, 0.8);
+}
+
+.selected-ship-info {
+    background: rgba(255, 170, 68, 0.2);
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 10px;
+}
+
+.selected-ship {
+    font-size: 18px;
+}
+
+.mini-stats {
+    font-size: 12px;
+    color: #ffaa44;
+    margin-top: 5px;
+}
+
+.menu-btn.secondary {
+    background: linear-gradient(135deg, #666, #333);
+    margin-top: 20px;
+}
+
+.ship-badge {
+    font-size: 10px;
+    background: rgba(255, 170, 68, 0.3);
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.current-player {
+    background: rgba(68, 255, 68, 0.2);
+    border-left: 2px solid #44ff44;
+}
+
+.opponent-health-bar {
+    height: 3px;
+    background: #ff4444;
+    margin-top: 3px;
+    transition: width 0.3s;
+}
+
+#combat-log {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    max-width: 250px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-family: monospace;
+}
+
+/* ДИСТАНЦИЯ ДО ПРОТИВНИКА */
+.opponent-distance {
+    font-size: 10px;
+    margin-top: 4px;
+    transition: color 0.3s;
+}
+
+.opponent-health-container {
+    margin: 5px 0;
+    height: 4px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.opponent-health-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff4444, #ff8844);
+    transition: width 0.3s;
+}
+
+.opponent-name {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* ПОЛОСА ЗДОРОВЬЯ ИГРОКА */
+.player-health {
+    position: fixed;
+    bottom: 30px;
+    left: 20px;
+    right: 20px;
+    height: 20px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#health-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #44ff44, #88ff44);
+    transition: width 0.3s;
+}
+
+/* КОМБАТ ЛОГ */
+#combat-log {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    max-width: 280px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-family: monospace;
+    pointer-events: none;
+    z-index: 150;
+}
+
+.combat-log-entry {
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}

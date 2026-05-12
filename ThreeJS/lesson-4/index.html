@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Space Arena - Выбор корабля</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- СЦЕНА ВЫБОРА КОРАБЛЯ (видна сначала) -->
+    <div id="ship-selection-ui">
+        <div id="info">
+            <h1>🚀 ВЫБОР КОРАБЛЯ</h1>
+            <p>Осмотрите корабли и выберите свой</p>
+        </div>
+        
+        <div id="model-panel">
+            <button id="prev-model" class="model-btn">◀</button>
+            <div id="model-info">
+                <span id="model-name">Загрузка...</span>
+                <span id="model-status"></span>
+                <div id="ship-stats-preview" class="ship-stats-preview"></div>
+            </div>
+            <button id="next-model" class="model-btn">▶</button>
+        </div>
+        
+        <button id="confirm-ship" class="confirm-btn">В БОЙ! ⚔️</button>
+    </div>
+
+    <!-- МЕНЮ МУЛЬТИПЛЕЕРА (появляется после выбора корабля) -->
+    <div id="multiplayer-menu" class="menu-overlay" style="display:none;">
+        <div class="menu-container">
+            <h1 class="glitch">🚀 SPACE ARENA</h1>
+            <div id="selected-ship-info" class="selected-ship-info"></div>
+            <div class="menu-buttons">
+                <button id="create-session" class="menu-btn">СОЗДАТЬ СЕССИЮ</button>
+                <button id="join-session" class="menu-btn">ПРИСОЕДИНИТЬСЯ</button>
+            </div>
+            <div id="join-panel" style="display:none;">
+                <input type="text" id="session-id" placeholder="ID сессии" class="input-field">
+                <button id="confirm-join" class="menu-btn small">ПОДКЛЮЧИТЬСЯ</button>
+            </div>
+            <button id="back-to-selection" class="menu-btn secondary">НАЗАД К ВЫБОРУ</button>
+        </div>
+    </div>
+
+    <!-- ЛОББИ -->
+    <div id="lobby" class="menu-overlay" style="display:none;">
+        <div class="lobby-container">
+            <h2>🛸 ЛОББИ</h2>
+            <div class="session-info">
+                <span>ID: <span id="session-id-display"></span></span>
+                <button id="leave-lobby" class="small-btn">Выйти</button>
+            </div>
+            <div id="players-list" class="players-list"></div>
+            <button id="start-game-btn" class="menu-btn" style="display:none;">СТАРТ ИГРЫ</button>
+            <div class="waiting-text">Ожидание игроков...</div>
+        </div>
+    </div>
+
+    <!-- ИГРОВОЙ HUD -->
+    <div id="game-hud" style="display:none;">
+        <div class="stats-panel">
+            <div class="ship-stats">
+                <div>❤️ Здоровье: <span id="health-value">0</span></div>
+                <div>🛡️ Броня: <span id="armor-value">0</span></div>
+                <div>💥 Урон: <span id="damage-value">0</span></div>
+            </div>
+            <div class="weapon-info">
+                <div id="current-weapon">🔫 ОСНОВНОЕ</div>
+                <div id="weapon-message" class="weapon-message"></div>
+            </div>
+        </div>
+        
+        <div id="opponents-list" class="opponents-list"></div>
+        <button id="pause-menu-btn" class="pause-btn">⏸️</button>
+    </div>
+
+    <!-- МЕНЮ ПАУЗЫ -->
+    <div id="pause-menu" class="menu-overlay" style="display:none;">
+        <div class="menu-container">
+            <h2>⏸️ ПАУЗА</h2>
+            <button id="close-session" class="menu-btn danger">ЗАКРЫТЬ СЕССИЮ</button>
+            <button id="resume-game" class="menu-btn">ПРОДОЛЖИТЬ</button>
+        </div>
+    </div>
+
+    <!-- КОНЕЦ ИГРЫ -->
+    <div id="game-over" class="menu-overlay" style="display:none;">
+        <div class="menu-container">
+            <h1>💀 ИГРА ОКОНЧЕНА</h1>
+            <div id="victory-message"></div>
+            <button id="back-to-menu" class="menu-btn">ГЛАВНОЕ МЕНЮ</button>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+                "socket.io-client": "https://cdn.socket.io/4.6.1/socket.io.esm.min.js"
+            }
+        }
+    </script>
+    
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
