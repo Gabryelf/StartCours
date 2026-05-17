@@ -123,4 +123,100 @@ button:hover {
     button {
         padding: 8px 18px;  /* Чуть меньше кнопки */
     }
+
+}
+
+/* ===== КНОПКА ВЫБОРА ===== */
+#selectBtn {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+}
+
+#selectBtn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #45a049, #3e8e41);
+    transform: scale(1.02);
+}
+
+#selectBtn:disabled {
+    background: #9e9e9e;
+    transform: none;
+}
+
+/* ===== КНОПКА СТАРТ ===== */
+#startBtn {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+}
+
+#startBtn:hover {
+    background: linear-gradient(135deg, #ee5a24, #dd4a14);
+    transform: scale(1.02);
+}
+
+/* ===== КОНТЕЙНЕР КНОПОК (в ряд) ===== */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ===== CANVAS КОНТЕЙНЕР (скрыт по умолчанию) ===== */
+.canvas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+#gameCanvas {
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+}
+
+/* ===== ЗАКРЫТИЕ ПО КЛИКУ (подсказка) ===== */
+.canvas-container::after {
+    content: "✖ Нажмите на фон, чтобы закрыть";
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    background: rgba(0,0,0,0.6);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-family: system-ui;
+    pointer-events: none;
+}
+
+/* ===== АДАПТИВ ДЛЯ МОБИЛЬНЫХ ===== */
+@media (max-width: 600px) {
+    .controls {
+        gap: 8px;
+    }
+    
+    button {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+    
+    #selectBtn, #startBtn {
+        font-size: 13px;
+    }
+    
+    .canvas-container::after {
+        font-size: 11px;
+        bottom: 15px;
+    }
 }
