@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.rows{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.interactable{
+    margin-top: 3px;
+    margin-left: 2px;
+    min-width: 200px;
+    min-height: 200px;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 4px;
+}
+
+#board {
+    width: 50vw;
+    height: 50vw;
+    min-width: 300px;
+    min-height: 300px;
+    max-width: calc(100vh - 2em);
+    max-height: calc(100vh - 2em);
+    border: 12px solid #161616;
+    border-radius: 12px;
+}
