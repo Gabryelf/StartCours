@@ -1,0 +1,20 @@
+<h1>Server waiting</h1>
+
+<!-- automaticali object on server socket.io-->
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    // global object window.io
+    //console.log(io);
+
+    const socket = io('http://localhost:8000');
+    //console.log(socket);
+    socket.on('connect', () => {
+        console.log(socket.id);
+
+        socket.on('messageFromServer', (data) => {console.log(data);});
+        socket.emit('messageFromClient', {data: "Hello from browser!"});
+    });
+
+
+</script>
