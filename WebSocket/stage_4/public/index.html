@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat-io</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+    <div>
+        <button onclick="joinRoom('chat1')">Чат 1</button>
+        <button onclick="joinRoom('chat2')">Чат 2</button>
+        <button onclick="joinRoom('chat3')">Чат 3</button>
+        
+        <p>Текущий чат: <span id="current-room">-</span></p>
+        
+        <form id="message-form">
+            <input type="text" id="user-message">
+            <input type="submit" value="Send!">
+        </form>
+
+        <ul id="messages"></ul>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io('http://localhost:8000');
+        let currentRoom = null;
+        
+        // Хранилище сообщений для каждого чата
+        const messagesStore = {
+            chat1: [],
+            chat2: [],
+            chat3: []
+        };
+        
+        function joinRoom(room) {
+            currentRoom = room;
+            document.getElementById('current-room').innerText = room;
+            socket.emit('joinRoom', room);
+            
+            // Показать сохраненные сообщения этого чата
+            const messagesList = document.querySelector('#messages');
+            messagesList.innerHTML = '';
+            messagesStore[room].forEach(msg => {
+                messagesList.innerHTML += `<li>${msg}</li>`;
+            });
+        }
+        
+        socket.on('newMessageToClients', (newMessage) => {
+            // Сохраняем сообщение в хранилище для нужного чата
+            if (messagesStore[newMessage.room]) {
+                messagesStore[newMessage.room].push(newMessage.text);
+            }
+            
+            // Если это текущий чат - показываем
+            if (currentRoom === newMessage.room) {
+                document.querySelector('#messages').innerHTML += `<li>${newMessage.text}</li>`;
+            }
+        });
+        
+        document.querySelector('#message-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!currentRoom) return;
+            
+            const newMessage = document.querySelector('#user-message').value;
+            socket.emit('newMessageFromServer', {text: newMessage});
+            document.querySelector('#user-message').value = '';
+        });
+    </script>
+</body>
+</html>
