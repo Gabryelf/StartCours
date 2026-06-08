@@ -2,7 +2,7 @@
   
 # StartCours
 
-<img src="https://github.com/Gabryelf/StartCours/blob/main/JavaScript/1-1-720x405.png" width="400" alt="Dragon animation"/>
+<img src="https://github.com/Gabryelf/StartCours/blob/main/JavaScript/1_zDY1styY9gAbl9DEeAS6DA.jpeg" width="400" alt="Dragon animation"/>
 
 </div>
 
