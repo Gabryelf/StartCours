@@ -1,0 +1,23 @@
+*{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#message-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#my_message {
+    left: 20px;
+    background-color: bisque;
+    border-radius: 5px;
+}
+
+#our_message {
+    right: 20px;
+    background-color: aquamarine;
+    border-radius: 5px;
+}
